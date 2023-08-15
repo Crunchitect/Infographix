@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&family=Poppins&display=swap');
+
+* {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+code, pre {
+    font-family: 'Fira Code', monospace;
+}
+
+.block:nth-child(2n+1) {
+    background-color: #111;
+}
+
+.block:nth-child(2n+0) {
+    background-color: #222;
+}
+
+.flex {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.half {
+    width: 50%;
+}
+
+.wide {
+    width: 80vw;
+}
+
+.xxl {
+    font-size: 5vw;
+}
+
+.xl {
+    font-size: 3vw;
+}
+
+@media screen and (max-width: 600px) {
+    
+    .flex {
+        flex-flow: column wrap;
+    }
+
+    .half {
+        width: 100%;
+    }
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.fancy-text {
+    background: -webkit-linear-gradient(right, #0a7b00, #15ff00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.to-fade-in {
+    opacity: 0;
+    &.fade-in {
+        animation: fade-in 1.5s forwards;
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+button {
+    border-radius: 5%;
+    color: white;
+    background: -webkit-linear-gradient(right, #0a7b00, #15ff00);
+    padding: 0.5%;
+}
