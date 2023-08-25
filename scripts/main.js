@@ -1,3 +1,5 @@
+const Ω = setInterval;
+
 function checkElementLocation() {
     var $window = $(window);
     var bottom_of_window = $window.scrollTop() + $window.height();
@@ -18,3 +20,10 @@ checkElementLocation();
 $(window).on('scroll', function() {
     checkElementLocation();
 });
+
+const animation = ['morphing', 'moving', 'sliding', 'panning', 'zooming'];
+var i = 0;
+Ω(() => {
+    i += 1;
+    $("#anim").html(animation[i % animation.length])
+}, 500);
