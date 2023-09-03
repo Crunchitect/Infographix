@@ -92,3 +92,7 @@ button {
     background: -webkit-linear-gradient(right, #0a7b00, #15ff00);
     padding: 0.5%;
 }
+
+.spread {
+    padding: 5%;
+}
