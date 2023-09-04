@@ -35,8 +35,6 @@ nav a {
     outline: none;
     color: white;
     padding: 14px 16px;
-    background-color: inherit !important;
-    background-image: none !important;
     font-family: inherit;
     margin: 0;
 }
@@ -185,4 +183,33 @@ body {
         display: block;
         text-align: left;
     }
+}
+
+
+.half {
+    width: 50%;
+}
+
+.flex-left {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+.flex-right {
+    display: flex;
+    flex-flow: row-reverse nowrap;
+    align-items: center;
+}
+
+.flex-nav {
+    display: flex;
+}
+
+.create {
+    padding: 2%;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    background-image: linear-gradient(right, #0a7b00, #15ff00) !important;
 }

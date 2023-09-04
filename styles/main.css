@@ -5,8 +5,12 @@
     font-family: 'Poppins', sans-serif;
 }
 
+body {
+    overflow-x: hidden;
+}
+
 code, pre {
-    font-family: 'Fira Code', monospace;
+    font-family: 'Fira Code', monospace !important;
 }
 
 .block:nth-child(2n+1) {
@@ -37,6 +41,10 @@ code, pre {
 
 .wide {
     width: 80vw;
+}
+
+.l {
+    font-size: 2vw;
 }
 
 .xxl {
@@ -110,4 +118,38 @@ button {
 img {
     width: 50vw;
     height: auto;
+}
+
+.glow {
+  color: #fff;
+  text-align: center;
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  -moz-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #00ff0d, 0 0 30px #00b209, 0 0 40px #008106, 0 0 50px #005504, 0 0 60px #003703, 0 0 70px #002102;
+  }
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #00ff0d, 0 0 40px #40ff49, 0 0 50px #5dff65, 0 0 60px #7bff82, 0 0 70px #a9fdad, 0 0 80px #d6fbd8;
+  }
+}
+
+.glow-red:hover {
+    color: #fff;
+    text-align: center;
+    -webkit-animation: glow-red 1s ease-in-out infinite alternate;
+    -moz-animation: glow-red 1s ease-in-out infinite alternate;
+    animation: glow-red 1s ease-in-out infinite alternate;
+}
+  
+@-webkit-keyframes glow-red {
+    from {
+        text-shadow: 0 0 10px #fff, 0 0 20px #ff0000, 0 0 30px #bf0000, 0 0 40px #840000, 0 0 50px #560000, 0 0 60px #360000, 0 0 70px #1a0000;
+    }
+    to {
+        text-shadow: 0 0 20px #fff, 0 0 30px #ff0000, 0 0 40px #fb2a2a, 0 0 50px #fe4949, 0 0 60px #fa7777, 0 0 70px #ffafaf, 0 0 80px #fdcbcb;
+    }
 }
