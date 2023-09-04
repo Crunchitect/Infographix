@@ -96,3 +96,18 @@ button {
 .spread {
     padding: 5%;
 }
+
+.main-video {
+    width: auto;
+    height: 30vw;
+}
+
+.strikethrough {
+    color: red;
+    text-decoration: line-through;
+}
+
+img {
+    width: 50vw;
+    height: auto;
+}
