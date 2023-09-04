@@ -153,3 +153,20 @@ img {
         text-shadow: 0 0 20px #fff, 0 0 30px #ff0000, 0 0 40px #fb2a2a, 0 0 50px #fe4949, 0 0 60px #fa7777, 0 0 70px #ffafaf, 0 0 80px #fdcbcb;
     }
 }
+
+.glow-small {
+    color: #fff;
+    text-align: center;
+    -webkit-animation: glow-small 1s ease-in-out infinite alternate;
+    -moz-animation: glow-small 1s ease-in-out infinite alternate;
+    animation: glow-small 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow-small {
+    from {
+        text-shadow: 0 0 5px #fff, 0 0 10px #00ff0d, 0 0 15px #00b209, 0 0 20px #008106, 0 0 25px #005504, 0 0 30px #003703, 0 0 35px #002102;
+    }
+    to {
+        text-shadow: 0 0 10px #fff, 0 0 15px #00ff0d, 0 0 20px #40ff49, 0 0 25px #5dff65, 0 0 30px #7bff82, 0 0 35px #a9fdad, 0 0 40px #d6fbd8;
+    }
+}
