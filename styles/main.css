@@ -3,6 +3,7 @@
 * {
     margin: 0;
     font-family: 'Poppins', sans-serif;
+    color: white;
 }
 
 body {
@@ -169,4 +170,17 @@ img {
     to {
         text-shadow: 0 0 10px #fff, 0 0 15px #00ff0d, 0 0 20px #40ff49, 0 0 25px #5dff65, 0 0 30px #7bff82, 0 0 35px #a9fdad, 0 0 40px #d6fbd8;
     }
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.js-cursor {
+    width: 2vw;
+    height: auto;
 }

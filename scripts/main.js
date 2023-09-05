@@ -21,9 +21,34 @@ $(window).on('scroll', function() {
     checkElementLocation();
 });
 
-const animation = ['morphing', 'moving', 'sliding', 'panning', 'zooming'];
-var i = 0;
-Ω(() => {
-    i += 1;
-    $("#anim").html(animation[i % animation.length])
-}, 500);
+const path = document.querySelector("path");
+const length = path.getTotalLength();
+const cursors = document.getElementsByClassName("js-cursor")
+const notnow = Date.now();
+
+const svg = document.getElementById("svg");
+// console.log(width, height);
+// console.log(svg.getBBox());
+
+const update = () => {
+    const { left, top, right, bottom } = svg.getBoundingClientRect();
+    const { width, height } = svg.getBBox();
+    const elem_width = right - left;
+    const elem_height = top - bottom;
+
+    const seconds_passed = ((Date.now() - notnow) / 1000);
+    const anime_frame = seconds_passed * 20 % length;
+    [].slice.call(cursors).forEach(
+        (item, index) => {
+            const {x, y} = path.getPointAtLength((anime_frame + index * 13) % length);
+            const x_real = x / width * elem_width;
+            const y_real = -y / height * elem_height;
+            item.style.top = (y_real).toString() + "px";
+            item.style.left = (x_real).toString() + "px";
+            // console.log(x, y, item,)
+        }
+    );
+    requestAnimationFrame(update);
+}
+
+requestAnimationFrame(update);
