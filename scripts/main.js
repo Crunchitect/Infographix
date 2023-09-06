@@ -37,10 +37,10 @@ const update = () => {
     const elem_height = top - bottom;
 
     const seconds_passed = ((Date.now() - notnow) / 1000);
-    const anime_frame = seconds_passed * 20 % length;
+    const anime_frame = seconds_passed * 15 % length;
     [].slice.call(cursors).forEach(
         (item, index) => {
-            const {x, y} = path.getPointAtLength((anime_frame + index * 13) % length);
+            const {x, y} = path.getPointAtLength((anime_frame + index * 15) % length);
             const x_real = x / width * elem_width;
             const y_real = -y / height * elem_height;
             item.style.top = (y_real).toString() + "px";

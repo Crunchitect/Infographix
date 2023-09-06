@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script defer>
+        async function nav_main() {
+            const nav = document.querySelector('nav');
+            const html = await (await fetch('../templates/navbar/navbar.html')).text();
+            nav.innerHTML = html;
+        }
+        window.addEventListener('load', nav_main);
+    </script>
+    <script src="https://kit.fontawesome.com/c38c981af0.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../templates/navbar/navbar.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="../scripts/main.js" defer type="module"></script>
+    <title>Infographix</title>
+</head>
+<body>
+    <nav></nav>
+    <div class="block flex rev">
+        <div class="dropdown flex" style="flex-flow: row-reverse nowrap !important;">
+            <button class="dropbtn">Language</button>
+            <div class="dropdown-content">
+                <a href="index.html">TH</a>
+                <a href="../index.html">EN</a>
+            </div>
+        </div>
+    </div>
+    <div class="spread flex-col block">
+        <h1 class="xxl elem to-fade-in">ทำสื่อ<span class="fancy-text">ในฝัน</span>ของคุณ<span class="fancy-text glow-small">อย่างรวดเร็ว</span>.</h1>
+        <div class="video-container elem to-fade-in">
+            <video autoplay loop muted class="main-video">
+                <source media="video/mp4" src="../assets/showcase.mp4">
+            </video>
+        </div>
+    </div>
+    <div class="spread flex block">
+        <article class="elem to-fade-in">
+            <h1 class="xl">ไม่ต้อง<span class="strikethrough glow-red">ทำซ้ำ</span>อีกต่อไป</h1>
+            <p class="l">สมองกลของเราจะช่วยจัดการโดยอัตโนมัติ, ทำความฝันคุณโดย<span class="fancy-text">เร็ว</span>และ<span class="fancy-text">อัตโนมัติ</span>.</p>
+        </article>
+        <div class="video-container elem to-fade-in">
+            <video autoplay loop muted class="main-video">
+                <source media="video/mp4" src="../assets/autocomplete.mp4">
+            </video>
+        </div>
+    </div>
+    <div class="spread block relative">
+        <article class="flex-col elem to-fade-in absolute" style="top: 50%; left:50%; transform: translate(-50%,-50%);">
+            <h1 class="xl">สำหรับ<span class="fancy-text">ทีมผู้พัฒนา</span></h1>
+            <p>ทำงานด้วยกันง่านแค่แชร์<span class="fancy-text">ลิงค์เดียว</span>!</p>
+        </article>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.1 -0.1 32.2 9.2" id="svg">
+            <path d="m 8 0 l 28 0 a 1 1 0 0 1 -1 13 l -27 0 a 1 1 0 0 1 0 -13" stroke="none" fill="none"/>
+        </svg>
+        <div class="absolute js-cursor cursor-background" style="background-image: url('../assets/satang.png');">
+            <img src="../assets/cursor.png">
+            <p>Satang</p>
+        </div>
+        <div class="absolute js-cursor cursor-background" style="background-color: green;">
+            <img src="../assets/cursor.png">
+            <p>crunchi</p>
+        </div>
+        <div class="absolute js-cursor cursor-background" style="background-color: rgba(255, 0, 0, 0.584);">
+            <img src="../assets/cursor.png">
+            <p>!C</p>
+        </div>
+        <div class="absolute js-cursor cursor-background" style="background-image: linear-gradient(to top, black, white);">
+            <img src="../assets/cursor.png">
+            <p>PhTh</p>
+        </div>
+        <div class="absolute js-cursor cursor-background" style="background-color: rgb(199, 146, 0);">
+            <img src="../assets/cursor.png">
+            <p>phum</p>
+        </div>
+        <div class="absolute js-cursor cursor-background" style="background-color: rgb(141, 78, 1);">
+            <img src="../assets/cursor.png">
+            <p>paxlate</p>
+        </div>
+    </div>
+    <div class="spread block flex">
+        <img src="../assets/wip.png" alt="">
+        <article>
+            <h1 class="xl"><span class="fancy-text glow-small">ปั้นโมเดล</span>โดยเร็ว</h1>
+            <p class="l">ทำงานสามมิติ<span class="fancy-text glow-small">ง่ายๆ</span>,ด้วย AI อย่าง <span class="fancy-text glow-small">Point-E</span>, เชิญ<span class="fancy-text glow-small">สานฝัน</span>ของโปรเจกต์คุณได้เลย</p>
+        </article>
+    </div>
+    <div class="spread flex-col block">
+        Infographix, 2023. TM
+    </div>
+</body>
+</html>

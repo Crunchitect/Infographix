@@ -109,6 +109,8 @@ button {
 .main-video {
     width: auto;
     height: 30vw;
+    border-style: solid;
+    border-color: black;
 }
 
 .strikethrough {
@@ -180,7 +182,17 @@ img {
     position: absolute;
 }
 
-.js-cursor {
+.js-cursor, .js-cursor > * {
     width: 2vw;
     height: auto;
+}
+
+.cursor-background {
+    padding: 0.5%;
+    padding-right: 5%;
+    border-radius: 5%;
+}
+
+.rev {
+    flex-flow: row-reverse nowrap;
 }
