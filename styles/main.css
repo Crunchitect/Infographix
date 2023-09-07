@@ -1,5 +1,91 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&family=Poppins&display=swap');
 
+:root {
+    --primary-color: #0dff00;
+    --secondary-color: #0a7b00;
+    
+    --text-color: white;
+    --background-primary: #111;
+    --background-secondary: #222;
+    --background-tertiary: #333;
+
+    --dropdown-select: white;
+    --dropdown-link: black;
+    --dropdown-background: white;
+    --dropdown-selection: #ddd;
+
+    --glow-one: color-mix(in srgb, 
+        var(--primary-color) calc(1/6 * 100%), 
+        var(--secondary-color)
+    );
+    --glow-two: color-mix(in srgb, 
+        var(--primary-color) calc(2/6 * 100%), 
+        var(--secondary-color)
+    );
+    --glow-three: color-mix(in srgb, 
+        var(--primary-color) calc(3/6 * 100%), 
+        var(--secondary-color)
+    );
+    --glow-four: color-mix(in srgb, 
+        var(--primary-color) calc(4/6 * 100%), 
+        var(--secondary-color)
+    );
+    --glow-five: color-mix(in srgb, 
+        var(--primary-color) calc(5/6 * 100%), 
+        var(--secondary-color)
+    );
+
+    --glow-light-one: color-mix(in srgb, 
+        var(--primary-color) calc(1/6 * 100%), 
+        white
+    );
+    --glow-light-two: color-mix(in srgb, 
+        var(--primary-color) calc(2/6 * 100%), 
+        white
+    );
+    --glow-light-three: color-mix(in srgb, 
+        var(--primary-color) calc(3/6 * 100%), 
+        white
+    );
+    --glow-light-four: color-mix(in srgb, 
+        var(--primary-color) calc(4/6 * 100%), 
+        white
+    );
+    --glow-light-five: color-mix(in srgb, 
+        var(--primary-color) calc(5/6 * 100%), 
+        white
+    );
+    --glow-light-six: color-mix(in srgb, 
+        var(--primary-color) calc(6/6 * 100%), 
+        white
+    );
+
+    --glow-dark-one: color-mix(in srgb, 
+        var(--primary-color) calc(1/6 * 100%), 
+        black
+    );
+    --glow-dark-two: color-mix(in srgb, 
+        var(--primary-color) calc(2/6 * 100%), 
+        black
+    );
+    --glow-dark-three: color-mix(in srgb, 
+        var(--primary-color) calc(3/6 * 100%), 
+        black
+    );
+    --glow-dark-four: color-mix(in srgb, 
+        var(--primary-color) calc(4/6 * 100%), 
+        black
+    );
+    --glow-dark-five: color-mix(in srgb, 
+        var(--primary-color) calc(5/6 * 100%), 
+        black
+    );
+    --glow-dark-six: color-mix(in srgb, 
+        var(--primary-color) calc(6/6 * 100%), 
+        black
+    );
+}
+
 * {
     margin: 0;
     font-family: 'Poppins', sans-serif;
@@ -74,7 +160,7 @@ img {
 }
 
 .fancy-text {
-    background: -webkit-linear-gradient(right, #0a7b00, #15ff00);
+    background: -webkit-linear-gradient(right, var(--secondary-color), var(--primary-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -95,10 +181,10 @@ img {
     }
 }
 
-button {
+.fancy-button {
     border-radius: 5%;
     color: white;
-    background: -webkit-linear-gradient(right, #0a7b00, #15ff00);
+    background: -webkit-linear-gradient(right, var(--secondary-color), var(--primary-color));
     padding: 0.5%;
 }
 
@@ -160,17 +246,17 @@ img {
 .glow-small {
     color: #fff;
     text-align: center;
-    -webkit-animation: glow-small 1s ease-in-out infinite alternate;
-    -moz-animation: glow-small 1s ease-in-out infinite alternate;
-    animation: glow-small 1s ease-in-out infinite alternate;
+    -webkit-animation: glow-small 0.5s ease-out infinite alternate;
+    -moz-animation: glow-small 0.5s ease-out infinite alternate;
+    animation: glow-small 0.5s ease-out infinite alternate;
 }
 
-@-webkit-keyframes glow-small {
+@keyframes glow-small {
     from {
-        text-shadow: 0 0 1px #fff, 0 0 2px #00ff0d, 0 0 3px #00b209, 0 0 4px #008106, 0 0 5px #005504, 0 0 6px #003703, 0 0 7px #002102;
+        text-shadow: 0 0 1px var(--glow-dark-six), 0 0 2px var(--glow-dark-five), 0 0 3px var(--glow-dark-four), 0 0 4px var(--glow-dark-three), 0 0 5px var(--glow-dark-two), 0 0 6px var(--glow-dark-one), 0 0 7px black;
     }
     to {
-        text-shadow: 0 0 2px #fff, 0 0 3px #00ff0d, 0   0 4px #40ff49, 0 0 5px #5dff65, 0 0 6px #7bff82, 0 0 7px #a9fdad, 0 0 8px #d6fbd8;
+        text-shadow: 0 0 2px var(--glow-light-six), 0 0 3px var(--glow-light-five), 0   0 4px var(--glow-light-four), 0 0 5px var(--glow-light-three), 0 0 6px var(--glow-light-two), 0 0 7px var(--glow-light-one), 0 0 8px white;
     }
 }
 
