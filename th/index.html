@@ -8,6 +8,30 @@
             const nav = document.querySelector('nav');
             const html = await (await fetch('../templates/navbar/navbar.html')).text();
             nav.innerHTML = html;
+
+            const lang = location.href.split('/').includes('th') ? 'th' : 'en';
+            console.log(lang);
+            const lang_th = document.querySelector('a#lang-th');
+            const lang_en = document.querySelector('a#lang-en');
+
+            lang_th.addEventListener('click', () => {
+                console.log(lang, '-> th');
+                switch (lang) {
+                    case 'th':
+                        break;
+                    case 'en':
+                        location.href = '/th'
+                }
+            });
+            lang_en.addEventListener('click', () => {
+                console.log(lang, '-> en');
+                switch (lang) {
+                    case 'th':
+                        location.href = '../'
+                    case 'en':
+                        break;
+                }
+            });
         }
         window.addEventListener('load', nav_main);
     </script>
@@ -47,7 +71,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.1 -0.1 32.2 9.2" id="svg">
             <path d="m 8 0 l 28 0 a 1 1 0 0 1 -1 13 l -27 0 a 1 1 0 0 1 0 -13" stroke="none" fill="none"/>
         </svg>
-        <div class="absolute js-cursor cursor-background" style="background-image: url('../assets/satang.png');">
+        <div class="absolute js-cursor cursor-background" style="background-color: rgb(230, 0, 255);">
             <img src="../assets/cursor.png">
             <p>Satang</p>
         </div>
