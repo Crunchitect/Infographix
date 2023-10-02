@@ -246,19 +246,41 @@ img {
 .glow-small {
     color: #fff;
     text-align: center;
-    -webkit-animation: glow-small 0.5s ease-out infinite alternate;
-    -moz-animation: glow-small 0.5s ease-out infinite alternate;
-    animation: glow-small 0.5s ease-out infinite alternate;
 }
 
-@keyframes glow-small {
+/* @keyframes glow-small {
     from {
         text-shadow: 0 0 1px var(--glow-dark-six), 0 0 2px var(--glow-dark-five), 0 0 3px var(--glow-dark-four), 0 0 4px var(--glow-dark-three), 0 0 5px var(--glow-dark-two), 0 0 6px var(--glow-dark-one), 0 0 7px black;
     }
     to {
         text-shadow: 0 0 2px var(--glow-light-six), 0 0 3px var(--glow-light-five), 0   0 4px var(--glow-light-four), 0 0 5px var(--glow-light-three), 0 0 6px var(--glow-light-two), 0 0 7px var(--glow-light-one), 0 0 8px white;
     }
-}
+} */
+
+/* @keyframes glow-small {
+    100% {
+      text-shadow:
+        0 0 4px var(--glow-dark-six),
+        0 0 11px var(--glow-dark-six),
+        0 0 19px var(--glow-dark-six),
+        0 0 40px var(--glow-dark-three),
+        0 0 80px var(--glow-dark-three),
+        0 0 90px var(--glow-dark-three),
+        0 0 100px var(--primary-color),
+        0 0 150px var(--primary-color);
+    }
+    0% {
+      text-shadow:
+        0 0 2px var(--glow-dark-six),
+        0 0 4px var(--glow-dark-six),
+        0 0 6px var(--glow-dark-six),
+        0 0 10px var(--glow-dark-three),
+        0 0 45px var(--glow-dark-three),
+        0 0 55px var(--glow-dark-three),
+        0 0 70px var(--primary-color),
+        0 0 80px var(--primary-color);
+    }
+} */
 
 .relative {
     position: relative;

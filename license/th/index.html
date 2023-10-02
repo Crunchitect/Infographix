@@ -13,6 +13,7 @@
             console.log(lang);
             const lang_th = document.querySelector('a#lang-th');
             const lang_en = document.querySelector('a#lang-en');
+            const take_me_home = document.querySelector('a#home');
 
             lang_th.addEventListener('click', () => {
                 console.log(lang, '-> th');
@@ -32,6 +33,7 @@
                         break;
                 }
             });
+            take_me_home.addEventListener('click', location.replace('../../th'))
         }
         window.addEventListener('load', nav_main);
     </script>
