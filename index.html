@@ -1,80 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="templates/navbar/navbar.js" defer type="module"></script>
+    <link rel="icon" href="/favicon.ico">
     <script src="https://kit.fontawesome.com/c38c981af0.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="templates/navbar/navbar.css">
-    <link rel="stylesheet" href="styles/main.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="scripts/main.js" defer type="module"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Infographix</title>
-</head>
-<body>
-    <nav></nav>
-    <div class="spread flex-col block">
-        <h1 class="xxl elem to-fade-in">Make your <span class="fancy-text glow-small">dream</span> media <span class="fancy-text glow-small">fast</span>.</h1>
-        <div class="video-container elem to-fade-in">
-            <video autoplay loop muted class="main-video">
-                <source media="video/mp4" src="assets/showcase.mp4">
-            </video>
-        </div>
-    </div>
-    <div class="spread flex block">
-        <article class="elem to-fade-in">
-            <h1 class="xl">Avoid <span class="strikethrough glow-red">repetitive</span> patterns.</h1>
-            <p class="l">Make AI manage the repetitive parts for you, Make your dreams <span class="fancy-text">fast</span> and <span class="fancy-text">automatic</span>.</p>
-        </article>
-        <div class="video-container elem to-fade-in">
-            <video autoplay loop muted class="main-video">
-                <source media="video/mp4" src="assets/autocomplete.mp4">
-            </video>
-        </div>
-    </div>
-    <div class="spread block relative">
-        <article class="flex-col elem to-fade-in absolute" style="top: 50%; left:50%; transform: translate(-50%,-50%);">
-            <h1 class="xl">Built for <span class="fancy-text">collaborators</span>.</h1>
-            <p>Easily collaborate with friends, with a <span class="fancy-text">single link</span>!</p>
-        </article>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.1 -0.1 32.2 9.2" id="svg">
-            <path d="m 8 0 l 28 0 a 1 1 0 0 1 -1 13 l -27 0 a 1 1 0 0 1 0 -13" stroke="none" fill="none"/>
-        </svg>
-        <div class="absolute js-cursor cursor-background" style="background-color: rgb(230, 0, 255);">
-            <img src="assets/cursor.png">
-            <p>Satang</p>
-        </div>
-        <div class="absolute js-cursor cursor-background" style="background-color: green;">
-            <img src="assets/cursor.png">
-            <p>crunchi</p>
-        </div>
-        <div class="absolute js-cursor cursor-background" style="background-color: rgba(255, 0, 0, 0.584);">
-            <img src="assets/cursor.png">
-            <p>!C</p>
-        </div>
-        <div class="absolute js-cursor cursor-background" style="background-image: linear-gradient(to top, black, white);">
-            <img src="assets/cursor.png">
-            <p>PhTh</p>
-        </div>
-        <div class="absolute js-cursor cursor-background" style="background-color: rgb(199, 146, 0);">
-            <img src="assets/cursor.png">
-            <p>phum</p>
-        </div>
-        <div class="absolute js-cursor cursor-background" style="background-color: rgb(141, 78, 1);">
-            <img src="assets/cursor.png">
-            <p>paxlate</p>
-        </div>
-    </div>
-    <div class="spread block flex">
-        <img src="assets/wip.png" alt="">
-        <article>
-            <h1 class="xl"><span class="fancy-text ">Modelling</span> effectively</h1>
-            <p class="l">Bring your dreams to life <span class="fancy-text ">easily</span>, with models like <span class="fancy-text ">Point-E</span>, Fell free to <span class="fancy-text ">imagine</span> your dreams and make it!</p>
-        </article>
-    </div>
-    <div class="spread flex-col block">
-        Infographix, 2023. TM
-        <a href="/license/">Software License</a>
-    </div>
-</body>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+    <noscript>OPEN YOUR JAVASCRIPT!</noscript>
+  </body>
 </html>
