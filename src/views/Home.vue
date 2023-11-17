@@ -27,8 +27,8 @@
     <Card heading="Build Fast with AI" icon="magic-wand-sparkles" rev="true">
         <p>Just type a thought out to reality!</p>
     </Card>
-    <Card heading="Easy Importing/Exporting" icon="arrow-up-from-bracket" rev="true">
-        <p>Export to Powerpoint, OBJ, Image file and more! You name it!</p>
+    <Card heading="Easy Import&shy;Export" icon="arrow-up-from-bracket" rev="true">
+        <p>Export to Powerpoint, OBJ, Image file and more!</p>
     </Card>
 </template>
 

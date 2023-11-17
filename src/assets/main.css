@@ -33,7 +33,7 @@ a.router-link-exact-active {
   animation: glitch 1s linear infinite;
 }
 
-@keyframes glitch{
+@keyframes glitch {
   2%,64%{
     transform: translate(2px,0) skew(0deg);
   }
@@ -46,19 +46,19 @@ a.router-link-exact-active {
 }
 
 .glitch:before,
-.glitch:after{
+.glitch:after {
   content: attr(title);
   position: absolute;
   left: 0;
 }
 
-.glitch:before{
+.glitch:before {
   animation: glitchTop 1s linear infinite;
   clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
   -webkit-clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
 }
 
-@keyframes glitchTop{
+@keyframes glitchTop {
   2%,64%{
     transform: translate(2px,-2px);
   }
@@ -70,13 +70,13 @@ a.router-link-exact-active {
   }
 }
 
-.glitch:after{
+.glitch:after {
   animation: glitchBotom 1.5s linear infinite;
   clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
   -webkit-clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
 }
 
-@keyframes glitchBotom{
+@keyframes glitchBotom {
   2%,64%{
     transform: translate(-2px,0);
   }
@@ -100,4 +100,15 @@ a.router-link-exact-active {
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background-color: #333;
+}
+
+input {
+  border: none;
+  border-bottom: 3px solid #333;
+  background-color: #0a0a0a;
+  box-shadow: none;
+  -webkit-appearance: none; 
+  -moz-appearance: none;
+  appearance: none;
+  color: white;
 }
