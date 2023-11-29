@@ -4,19 +4,20 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <div class="padding"></div>
-  <nav v-if="viewWidth >= 960">
+  <nav v-if="viewWidth >= navlang.update_width">
     <div class="left">
       <span class="pad"></span>
       <span class="fancy-text"><strong>Infographix</strong></span>
       <span class="pad"></span>
-      <router-link to="/">Home</router-link>
-      <router-link to="/projects">Projects</router-link>
-      <router-link to="/about">About</router-link>
+      <router-link to="/">{{ navlang.home }}</router-link>
+      <router-link to="/projects">{{ navlang.projects }}</router-link>
+      <router-link to="/about">{{ navlang.about }}</router-link>
     </div>
     <div class="right">
-        <router-link to="/tuto">Start</router-link>
-        <router-link to="/sign-in">Sign In</router-link>
-        <router-link to="/sign-up">Sign Up</router-link>
+        <span @click="langc">{{ navlang.change_lang }}</span>
+        <router-link to="/tuto">{{ navlang.tuto }}</router-link>
+        <router-link to="/sign-in">{{ navlang.signin }}</router-link>
+        <router-link to="/sign-up">{{ navlang.signup }}</router-link>
     </div>
   </nav>
   <nav v-else>
@@ -30,7 +31,8 @@ import { RouterLink, RouterView } from 'vue-router'
       <router-link to="/about"><i class="fa-solid fa-info"></i></router-link>
     </div>
     <div class="right">
-        <router-link to="/tuto"><i class="fa-solid fa-arrow-right"></i></router-link>
+        <span @click="langc"><i class="fa-solid fa-globe"></i></span>
+        <router-link to="/tuto"><i class="fa-solid fa-question-circle"></i></router-link>
         <router-link to="/sign-in"><i class="fa-solid fa-right-to-bracket"></i></router-link>
         <router-link to="/sign-up"><i class="fa-solid fa-user-plus"></i></router-link>
     </div>
@@ -43,18 +45,41 @@ import { RouterLink, RouterView } from 'vue-router'
     name: "App",
     data() {
       return {
-        viewWidth: window.innerWidth
+        viewWidth: window.innerWidth,
+        lang: "th",
+        navlang: {} as any,
+        langs: ["th", "en"],
+        change_lang: this.change_lang_gen()
       }
     },
     mounted() {
-      addEventListener('resize', this.getWidth);
+      fetch("src/langs/navbar.json")
+        .then(r => r.json())
+        .then(data => this.navlang = data[this.lang])
+      addEventListener('resize', this.getWidth)
     },
     unmounted() {
-      removeEventListener('resize', this.getWidth);
+      removeEventListener('resize', this.getWidth)
     },
     methods: {
+      // Syntax is weird
+      *change_lang_gen() {
+          let i=0
+          while (true) {
+            yield this.langs[i]
+            i++; i%=this.langs.length
+          }
+      },
       getWidth() {
-        this.viewWidth = window.innerWidth;
+        this.viewWidth = window.innerWidth
+      },
+      langc() {
+        let lk = this.change_lang.next().value
+        console.log(lk)
+        this.lang = lk;
+        fetch("src/langs/navbar.json")
+        .then(r => r.json())
+        .then(data => this.navlang = data[this.lang])
       }
     }
   }

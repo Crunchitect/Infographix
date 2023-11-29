@@ -24,7 +24,6 @@
             pass(): undefined {
             },
             async doThingy() {
-                console.log('!!!')
                 this.val = '[NOT FOUND]'
                 await new Promise(r => setTimeout(r, 150));
                 this.val = '404'

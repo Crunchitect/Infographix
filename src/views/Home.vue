@@ -7,10 +7,17 @@
     <div class="padding"></div>
     <div class="row">
         <div class="col">
-            <h1><span class="fancy-text">Avoid</span> repetitive patterns</h1>
-            <p>Make AI manage the repetitive parts for you, <br> Make your dreams fast and automatic.</p>
+            <h1><span class="fancy-text">Make</span> 3d models</h1>
+            <p>Make AI manage the models for you, <br> Create fast and smooth.</p>
         </div>
         <video muted autoplay loop src="../assets/videos/autocomplete.mp4" class="auto"></video>
+    </div>
+    <div class="row">
+        <video muted autoplay loop src="../assets/videos/autowrite.mp4" class="auto"></video>
+        <div class="col">
+            <h1 class="lol"><span class="fancy-text lol">Avoid</span> repetitive patterns</h1>
+            <p class="lol">Make AI manage the repetitive parts for you, <br> Make your dreams fast and automatic.</p>
+        </div>
     </div>
     <div class="padding"></div>
     <div class="padding"></div>
@@ -27,7 +34,7 @@
     <Card heading="Build Fast with AI" icon="magic-wand-sparkles" rev="true">
         <p>Just type a thought out to reality!</p>
     </Card>
-    <Card heading="Easy Import&shy;Export" icon="arrow-up-from-bracket" rev="true">
+    <Card heading="Easy Import&shy;/Export" icon="arrow-up-from-bracket" rev="true">
         <p>Export to Powerpoint, OBJ, Image file and more!</p>
     </Card>
 </template>
@@ -41,9 +48,10 @@
 </script>
 
 <style scoped>
-
+    @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
     h1 {
         text-align: center;
+        font-size: 2rem;
     }
     div.padding {
         padding-top: 3vh;
@@ -82,5 +90,17 @@
 
     .auto {
         width: 50vw;
+    }
+
+    .lol {
+        font-family: 'Papyrus', 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
+    }
+
+    h1.lol {
+        font-size: 5rem;
+    }
+
+    p.lol {
+        font-size: 4rem;
     }
 </style>
