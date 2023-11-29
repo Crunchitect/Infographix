@@ -7,17 +7,10 @@
     <div class="padding"></div>
     <div class="row">
         <div class="col">
-            <h1><span class="fancy-text">Make</span> 3d models</h1>
-            <p>Make AI manage the models for you, <br> Create fast and smooth.</p>
+            <h1 ><span class="fancy-text">Avoid</span> repetitive patterns</h1>
+            <p >Make AI manage the repetitive parts for you, <br> Make your dreams fast and automatic.</p>
         </div>
         <video muted autoplay loop src="../assets/videos/autocomplete.mp4" class="auto"></video>
-    </div>
-    <div class="row">
-        <video muted autoplay loop src="../assets/videos/autowrite.mp4" class="auto"></video>
-        <div class="col">
-            <h1 class="lol"><span class="fancy-text lol">Avoid</span> repetitive patterns</h1>
-            <p class="lol">Make AI manage the repetitive parts for you, <br> Make your dreams fast and automatic.</p>
-        </div>
     </div>
     <div class="padding"></div>
     <div class="padding"></div>
