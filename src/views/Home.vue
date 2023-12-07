@@ -1,42 +1,69 @@
 <template>
     <div class="padding"></div>
-    <h1 class="big">Make your <span class="fancy-text">dream</span> media <span class="fancy-text">fast</span>.</h1>
+    <h1 class="big" v-html="lang.header"></h1>
     <div class="center">
         <video muted autoplay loop src="../assets/videos/showcase.mp4"></video>
     </div>
     <div class="padding"></div>
     <div class="row">
         <div class="col">
-            <h1 ><span class="fancy-text">Avoid</span> repetitive patterns</h1>
-            <p >Make AI manage the repetitive parts for you, <br> Make your dreams fast and automatic.</p>
+            <h1 v-html="lang.rep" style="font-size: 4rem;"></h1>
+            <p v-html="lang.ux" style="font-size: 2rem;"></p>
         </div>
         <video muted autoplay loop src="../assets/videos/autocomplete.mp4" class="auto"></video>
     </div>
     <div class="padding"></div>
     <div class="padding"></div>
 
-    <Card heading="Fast & Responsive" icon="bolt">
-        <p>Change every detail and look with reactive elements!</p>
+    <Card :heading="lang.resphead" icon="bolt">
+        <p>{{ lang.resp }}</p>
     </Card>
-    <Card heading="Built for collabs" icon="users">
-        <p>Share everything with a single link!</p>
+    <Card :heading="lang.usershead" icon="users">
+        <p>{{ lang.users }}</p>
     </Card>
-    <Card heading="User-Freindly" icon="user-plus">
-        <p>Make videos without worrying what an MP4 is!</p>
+    <Card :heading="lang.uxhead" icon="user-plus">
+        <p>{{ lang.ux }}</p>
     </Card>
-    <Card heading="Build Fast with AI" icon="magic-wand-sparkles" rev="true">
-        <p>Just type a thought out to reality!</p>
+    <Card :heading="lang.aihead" icon="magic-wand-sparkles" rev="true">
+        <p>{{ lang.ai }}</p>
     </Card>
-    <Card heading="Easy Import&shy;/Export" icon="arrow-up-from-bracket" rev="true">
-        <p>Export to Powerpoint, OBJ, Image file and more!</p>
+    <Card :heading="lang.imexporthead" icon="arrow-up-from-bracket" rev="true">
+        <p>{{ lang.imexport }}</p>
     </Card>
 </template>
+
+<script setup lang="ts">
+    import { useRoute, useRouter } from 'vue-router';
+    const route = useRoute();
+    const router = useRouter();
+    if (route.hash) router.push(`/google-auth${route.hash}`)
+</script>
 
 <script lang="ts">
     import Card from '../components/Card.vue'
     export default {
         name: "Home",
-        components: { Card }
+        components: { Card },
+        props: ["language"],
+        data() {
+            return {
+                lang: {} as any
+            }
+        },
+        mounted() {
+            fetch("src/langs/home.json")
+                .then(r => r.json())
+                .then(data => this.lang = data[this.language])
+        },
+        watch: {
+            language(n) {
+                console.log(n)
+                fetch("src/langs/home.json")
+                    .then(r => r.json())
+                    .then(data => this.lang = data[n])
+                    .then(() => console.log(this.lang))
+            }
+        }
     }
 </script>
 

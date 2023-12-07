@@ -14,6 +14,15 @@ const router = createRouter({
       component: () => import('../views/SignIn.vue')
     },
     {
+      path: '/sign-up',
+      redirect: '/sign-in'
+    },
+    {
+      path: '/google-auth',
+      name: 'google-auth',
+      component: () => import('../views/GoogleAuth.vue')
+    },
+    {
       path: '/:catchAll(.*)',
       name: 'NotFound',
       component: () => import('../views/NotFound.vue')

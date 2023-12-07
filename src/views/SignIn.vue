@@ -1,18 +1,37 @@
 <template>
     <div>
-        <h1>Sign In</h1>
-        <form>
-            <input type="text" placeholder="Username" pattern="[A-Za-z0-9_\-]{3,}">
-            <div class="padding"></div>
-            <input type="password" placeholder="Password" pattern="[A-Za-z0-9_\-]{3,}">
+        <h1>{{ language == "en" ? "Sign Up" : "สมัครบัญชีใหม่" }}</h1>
+        <form @submit.prevent="signup">
+            <input type="submit" value="With Google">
         </form>
     </div>
 </template>
 
-<script lang="ts">
-export default {
-    data() {
+<script setup lang="ts">
+    const supabaseUrl = 'https://uhtmxrngduhmkroxbcdk.supabase.co'
+    const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
+    const supabase = createClient(supabaseUrl, supabaseKey)
+    const signup = async () => {
+            const {data, error} = await supabase.auth.signInWithOAuth({
+                provider: "google",
+                options: {
+                    queryParams: {
+                    access_type: 'offline',
+                    prompt: 'consent'
+                    }   
+                },
+                
+            });
+            console.log(data, error)
+    }
+</script>
 
+<script lang="ts">
+import { createClient } from '@supabase/supabase-js'
+export default {
+    props: ["language"],
+    methods: {
+        
     }
 }
 </script>

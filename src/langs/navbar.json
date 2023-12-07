@@ -5,7 +5,6 @@
         "about": "About",
         "tuto": "How to use",
         "signin": "Sign In",
-        "signup": "Sign Up",
         "change_lang": "EN",
         "update_width": 960
     },
@@ -15,7 +14,6 @@
         "about": "เกี่ยวกับเรา",
         "tuto": "คู่มือการใช้",
         "signin": "เข้าสู่ระบบ",
-        "signup": "สมัครบัญชีใหม่",
         "change_lang": "TH",
         "update_width": 1230
     }

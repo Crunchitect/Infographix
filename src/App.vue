@@ -17,7 +17,6 @@ import { RouterLink, RouterView } from 'vue-router'
         <span @click="langc">{{ navlang.change_lang }}</span>
         <router-link to="/tuto">{{ navlang.tuto }}</router-link>
         <router-link to="/sign-in">{{ navlang.signin }}</router-link>
-        <router-link to="/sign-up">{{ navlang.signup }}</router-link>
     </div>
   </nav>
   <nav v-else>
@@ -33,11 +32,10 @@ import { RouterLink, RouterView } from 'vue-router'
     <div class="right">
         <span @click="langc"><i class="fa-solid fa-globe"></i></span>
         <router-link to="/tuto"><i class="fa-solid fa-question-circle"></i></router-link>
-        <router-link to="/sign-in"><i class="fa-solid fa-right-to-bracket"></i></router-link>
-        <router-link to="/sign-up"><i class="fa-solid fa-user-plus"></i></router-link>
+        <router-link to="/sign-in"><i class="fa-solid fa-user-plus"></i></router-link>
     </div>
   </nav>
-  <router-view></router-view>
+  <router-view :language="lang"></router-view>
 </template>
 
 <script lang="ts">
@@ -75,7 +73,6 @@ import { RouterLink, RouterView } from 'vue-router'
       },
       langc() {
         let lk = this.change_lang.next().value
-        console.log(lk)
         this.lang = lk;
         fetch("src/langs/navbar.json")
         .then(r => r.json())
