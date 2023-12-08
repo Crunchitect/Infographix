@@ -51,7 +51,7 @@ import { RouterLink, RouterView } from 'vue-router'
       }
     },
     mounted() {
-      fetch("/langs/navbar.json")
+      fetch("@/langs/navbar.json")
         .then(r => r.json())
         .then(data => this.navlang = data[this.lang])
       addEventListener('resize', this.getWidth)
