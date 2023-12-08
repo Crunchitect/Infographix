@@ -7,33 +7,31 @@
     </div>
 </template>
 
-<script setup lang="ts">
-    const supabaseUrl = 'https://uhtmxrngduhmkroxbcdk.supabase.co'
-    const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
-    const supabase = createClient(supabaseUrl, supabaseKey)
-    const signup = async () => {
-            const {data, error} = await supabase.auth.signInWithOAuth({
-                provider: "google",
-                options: {
-                    queryParams: {
-                    access_type: 'offline',
-                    prompt: 'consent'
-                    }   
-                },
-                
-            });
-            console.log(data, error)
-    }
-</script>
-
 <script lang="ts">
-import { createClient } from '@supabase/supabase-js'
-export default {
-    props: ["language"],
-    methods: {
-        
+    import { createClient } from '@supabase/supabase-js'
+    export default {
+        props: ["language"],
+        data() {
+            return {
+                supabase: createClient('https://uhtmxrngduhmkroxbcdk.supabase.co', import.meta.env.VITE_SUPABASE_KEY)
+            }
+        },
+        methods: {
+            async signup() {
+                const {data, error} = await this.supabase.auth.signInWithOAuth({
+                    provider: "google",
+                    options: {
+                        queryParams: {
+                            access_type: 'offline',
+                            prompt: 'consent'
+                        }   
+                    },
+                    
+                });
+                console.log(data, error)
+            }
+        }
     }
-}
 </script>
 
 <style scoped>
