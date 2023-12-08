@@ -51,14 +51,14 @@
             }
         },
         mounted() {
-            fetch("src/langs/home.json")
+            fetch("/langs/home.json")
                 .then(r => r.json())
                 .then(data => this.lang = data[this.language])
         },
         watch: {
             language(n) {
                 console.log(n)
-                fetch("src/langs/home.json")
+                fetch("/langs/home.json")
                     .then(r => r.json())
                     .then(data => this.lang = data[n])
                     .then(() => console.log(this.lang))
