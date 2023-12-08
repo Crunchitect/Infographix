@@ -47,20 +47,41 @@
         props: ["language"],
         data() {
             return {
-                lang: {} as any
+                langs: {
+                    "en": {
+                        "header": "Make your <span class=\"fancy-text\">dream</span> media <span class=\"fancy-text\">fast</span>.",
+                        "rep": "<span class=\"fancy-text\">Avoid</span> repetitive patterns",
+                        "resp": "Change every detail and look with reactive elements!",
+                        "users": "Share everything with a single link!",
+                        "ux": "Make videos without worrying what an MP4 is!",
+                        "ai": "Just type a thought out to reality!",
+                        "imexport": "Export to Powerpoint, OBJ, Image file and more!",
+                        "resphead": "Fast & Responsive",
+                        "usershead": "Built for collabs",
+                        "uxhead": "User-Freindly",
+                        "aihead": "Build Fast with AI",
+                        "imexporthead": "Easy Import/Export"
+                    },
+                    "th": {
+                        "header": "สร้างสื่อ <span class=\"fancy-text\">ในฝัน</span> ด้วย <span class=\"fancy-text\">AI</span>.",
+                        "rep": "ข่ามการทำสิ่ง<span class=\"fancy-text\">ซ้ำ</span>",
+                        "resp": "ทำได้อย่างรวดเร็ว",
+                        "users": "แชร์ให้ทุกคนด้วยลิงก์เดียว",
+                        "ux": "สร้างวิดีโอโดยไม่ต้อวรู้เรื่องไฟล์",
+                        "ai": "พิมพ์ความฝันคุณออกมาเป็นความจริง",
+                        "imexport": "ส่งออกเป็น Powerpoint, OBJ, Image file และอีกมากมาย!",
+                        "resphead": "รวดเร็ว",
+                        "usershead": "สร้างเพื่อความสามัคคี",
+                        "uxhead": "ง่ายต่อการใช้",
+                        "aihead": "สร้างสื่อเร็วโดย AI",
+                        "imexporthead": "นำเข้า/ส่งออกอย่างง่าย"
+                    }
+                } as {[index: string]:any}
             }
         },
-        mounted() {
-            fetch("assets/langs/home.json")
-                .then(r => r.json())
-                .then(data => this.lang = data[this.language])
-        },
-        watch: {
-            language(n) {
-                console.log(n)
-                fetch("assets/langs/home.json")
-                    .then(r => r.json())
-                    .then(data => this.lang = data[n])
+        computed: {
+            lang() {
+                return this.langs[this.language as string];
             }
         }
     }

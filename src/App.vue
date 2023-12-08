@@ -45,15 +45,31 @@ import { RouterLink, RouterView } from 'vue-router'
       return {
         viewWidth: window.innerWidth,
         lang: "th",
-        navlang: {} as any,
         langs: ["th", "en"],
-        change_lang: this.change_lang_gen()
+        change_lang: this.change_lang_gen(),
+        lang_store: {
+            "en": {
+                "home": "Home",
+                "projects": "Projects",
+                "about": "About",
+                "tuto": "How to use",
+                "signin": "Sign In",
+                "change_lang": "EN",
+                "update_width": 960
+            },
+            "th": {
+                "home": "หน้าหลัก",
+                "projects": "โปรเจกต์",
+                "about": "เกี่ยวกับเรา",
+                "tuto": "คู่มือการใช้",
+                "signin": "เข้าสู่ระบบ",
+                "change_lang": "TH",
+                "update_width": 1230
+            }
+        } as {[index: string]:any}
       }
     },
     mounted() {
-      fetch("/langs/navbar.json")
-        .then(r => r.json())
-        .then(data => this.navlang = data[this.lang])
       addEventListener('resize', this.getWidth)
     },
     unmounted() {
@@ -77,6 +93,11 @@ import { RouterLink, RouterView } from 'vue-router'
         fetch("src/langs/navbar.json")
         .then(r => r.json())
         .then(data => this.navlang = data[this.lang])
+      }
+    },
+    computed: {
+      navlang() {
+        return this.lang_store[this.lang as string] as any;
       }
     }
   }
