@@ -1,35 +1,36 @@
 <template>
-    <div class="padding"></div>
-    <h1 class="big" v-html="lang.header"></h1>
-    <div class="center">
-        <video muted autoplay loop src="../assets/videos/showcase.mp4"></video>
-    </div>
-    <div class="padding"></div>
-    <div class="row">
-        <div class="col">
-            <h1 v-html="lang.rep" style="font-size: 4rem;"></h1>
-            <p v-html="lang.ux" style="font-size: 2rem;"></p>
+    <div>
+        <div class="padding"></div>
+        <h1 class="big" v-html="lang.header"></h1>
+        <div class="center">
+            <video muted autoplay loop src="../assets/videos/showcase.mp4"></video>
         </div>
-        <video muted autoplay loop src="../assets/videos/autocomplete.mp4" class="auto"></video>
+        <div class="padding"></div>
+        <div class="row">
+            <div class="col">
+                <h1 v-html="lang.rep" style="font-size: 4rem;"></h1>
+                <p v-html="lang.ux" style="font-size: 2rem;"></p>
+            </div>
+            <video muted autoplay loop src="../assets/videos/autocomplete.mp4" class="auto"></video>
+        </div>
+        <div class="padding"></div>
+        <div class="padding"></div>
+        <Card :heading="lang.resphead" icon="bolt">
+            <p>{{ lang.resp }}</p>
+        </Card>
+        <Card :heading="lang.usershead" icon="users">
+            <p>{{ lang.users }}</p>
+        </Card>
+        <Card :heading="lang.uxhead" icon="user-plus">
+            <p>{{ lang.ux }}</p>
+        </Card>
+        <Card :heading="lang.aihead" icon="magic-wand-sparkles" rev="true">
+            <p>{{ lang.ai }}</p>
+        </Card>
+        <Card :heading="lang.imexporthead" icon="arrow-up-from-bracket" rev="true">
+            <p>{{ lang.imexport }}</p>
+        </Card>
     </div>
-    <div class="padding"></div>
-    <div class="padding"></div>
-
-    <Card :heading="lang.resphead" icon="bolt">
-        <p>{{ lang.resp }}</p>
-    </Card>
-    <Card :heading="lang.usershead" icon="users">
-        <p>{{ lang.users }}</p>
-    </Card>
-    <Card :heading="lang.uxhead" icon="user-plus">
-        <p>{{ lang.ux }}</p>
-    </Card>
-    <Card :heading="lang.aihead" icon="magic-wand-sparkles" rev="true">
-        <p>{{ lang.ai }}</p>
-    </Card>
-    <Card :heading="lang.imexporthead" icon="arrow-up-from-bracket" rev="true">
-        <p>{{ lang.imexport }}</p>
-    </Card>
 </template>
 
 <script setup lang="ts">

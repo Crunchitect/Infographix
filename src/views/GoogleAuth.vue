@@ -1,7 +1,11 @@
 <template>
-    <div class="userblock">
-        <img :src="user.user_metadata.avatar_url">
-        <h1>{{  user.user_metadata.name  }}</h1>
+    <div>
+        <div class="userblock">
+            <img :src="user?.user_metadata?.avatar_url" referrerpolicy="no-referrer">
+            <h1>{{  user?.user_metadata?.name  }}</h1>
+        </div>
+        <p>{{ user?.user_metadata?.avatar_url }}</p>
+        <button class="sign-out" @click="signout">Sign Out</button>
     </div>
 </template>
 
@@ -31,26 +35,28 @@
 <script setup lang="ts">
     import { ref } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
-    import { createClient } from '@supabase/supabase-js';
+    import { supabase } from '../composables/supabase';
 
-    const supabase = createClient("https://uhtmxrngduhmkroxbcdk.supabase.co", import.meta.env.VITE_SUPABASE_KEY);
     let user = ref({} as any);
     const route = useRoute();
     const router = useRouter();
+
+    
     if (!route.hash) {
-        router.push('/404')
-        throw new Error();
+        router.push('/404');
     } else {
         const client_token = route.hash.slice(1).split('&')[0].split('=')[1];
-        // const requester = new XMLHttpRequest();
-        // requester.open("GET", `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${client_token}`, false)
-        // requester.send(null)
-        // debugger;
         (async () => {
             const { data: { user: user_ } } = await supabase.auth.getUser();
             user.value = user_;
             console.log(user.value)
         })();
     }
+
+    const signout = async () => {
+        let { error } = await supabase.auth.signOut(); 
+        router.push('/');
+        return error;
+    };
 
 </script>
