@@ -35,7 +35,7 @@
 <script setup lang="ts">
     import { ref } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
-    import { supabase } from '../composables/supabase';
+    import { supabase } from '@/lib/supabase';
 
     let user = ref({} as any);
     const route = useRoute();

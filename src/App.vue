@@ -90,9 +90,6 @@ import { RouterLink, RouterView } from 'vue-router'
       langc() {
         let lk = this.change_lang.next().value
         this.lang = lk;
-        fetch("src/langs/navbar.json")
-        .then(r => r.json())
-        .then(data => this.navlang = data[this.lang])
       }
     },
     computed: {

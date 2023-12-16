@@ -7,5 +7,4 @@ import { createClient } from '@supabase/supabase-js';
 
 const app = createApp(App)
 app.use(router)
-app.config.globalProperties.$supabase
 app.mount('#app')

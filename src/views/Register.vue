@@ -8,17 +8,12 @@
 </template>
 
 <script lang="ts">
-    import { createClient } from '@supabase/supabase-js'
+    import { supabase } from '@/lib/supabase';
     export default {
         props: ["language"],
-        data() {
-            return {
-                supabase: createClient('https://uhtmxrngduhmkroxbcdk.supabase.co', import.meta.env.VITE_SUPABASE_KEY)
-            }
-        },
         methods: {
             async signup() {
-                const {data, error} = await this.supabase.auth.signInWithOAuth({
+                const {data, error} = await supabase.auth.signInWithOAuth({
                     provider: "google",
                     options: {
                         queryParams: {
@@ -28,7 +23,7 @@
                     },
                     
                 });
-                console.log(data, error)
+                // console.log(data, error)
             }
         }
     }
