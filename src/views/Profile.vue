@@ -123,7 +123,7 @@
         return error;
     };
 
-    let project_data = ref({} as {data: any, error: any});
+    let project_data = ref({data: {}, error: null as any} as any);
     (async () => {
         project_data.value = await supabase.from("Projects").select("name")
     })();
