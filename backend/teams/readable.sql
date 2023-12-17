@@ -2,13 +2,11 @@
    EXISTS (
       SELECT
          1
-      FROM
-         "Teams"
       WHERE
          (
             (
                (
-                  "Teams".team_members @> (
+                  team_members @> (
                      format(
                         '[{"uid": "%s", "status": "owner"}]',
                         auth.uid()
@@ -16,7 +14,7 @@
                   )
                )
                OR (
-                  "Teams".team_members @> (
+                  team_members @> (
                      format(
                         '[{"uid": "%s", "status": "edit"}]',
                         auth.uid()
@@ -24,7 +22,7 @@
                   )
                )
                OR (
-                  "Teams".team_members @> (
+                  team_members @> (
                      format(
                         '[{"uid": "%s", "status": "read"}]',
                         auth.uid()

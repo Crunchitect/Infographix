@@ -4,13 +4,17 @@
         <form @submit.prevent="signup">
             <input type="submit" value="With Google">
         </form>
+        <ErrorBox v-if="error" :msg="error"/>
     </div>
 </template>
 
 <script lang="ts">
     import { supabase } from '@/lib/supabase';
+    import { AuthError } from '@supabase/supabase-js';
+    import ErrorBox from "../components/ErrorBox.vue";
     export default {
         props: ["language"],
+        components: { ErrorBox },
         methods: {
             async signup() {
                 const {data, error} = await supabase.auth.signInWithOAuth({
@@ -23,7 +27,13 @@
                     },
                     
                 });
+                this.error = error;
                 // console.log(data, error)
+            }
+        },
+        data() {
+            return {
+                error: null as (null | string | AuthError)
             }
         }
     }

@@ -18,9 +18,13 @@ const router = createRouter({
       redirect: '/sign-in'
     },
     {
+      path: '/profile',
+      name: 'Profile',
+      component: () => import('../views/Profile.vue')
+    },
+    {
       path: '/google-auth',
-      name: 'google-auth',
-      component: () => import('../views/GoogleAuth.vue')
+      redirect: '/profile'
     },
     {
       path: '/:catchAll(.*)',
