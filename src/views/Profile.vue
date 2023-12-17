@@ -10,7 +10,7 @@
         <h1 class="big">Projects</h1>
     </div>
     <div class="project-panel">
-        <p v-if="!(project_data?.data)" class="blank">No Projects Found... Maybe create a new one?</p>
+        <p v-if="!(project_data?.data[0])" class="blank">No Projects Found... Maybe create a new one?</p>
         <div class="project" :style="`--anim-order: ${index}`" v-for="(project, index) in project_data?.data">
             <p>{{ project?.name ?? "What the fuck is in ur config?" }}</p>
         </div>
