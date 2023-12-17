@@ -37,7 +37,7 @@
     import { useRoute, useRouter } from 'vue-router';
     const route = useRoute();
     const router = useRouter();
-    if (route.hash) router.push(`/profile${route.hash}`)
+    if (route.hash) router.push(`/projects${route.hash}`)
 </script>
 
 <script lang="ts">

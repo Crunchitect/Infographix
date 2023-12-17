@@ -18,13 +18,13 @@ const router = createRouter({
       redirect: '/sign-in'
     },
     {
-      path: '/profile',
-      name: 'Profile',
-      component: () => import('../views/Profile.vue')
+      path: '/projects',
+      name: 'Projects',
+      component: () => import('../views/Projects.vue')
     },
     {
       path: '/google-auth',
-      redirect: '/profile'
+      redirect: '/projects'
     },
     {
       path: '/:catchAll(.*)',

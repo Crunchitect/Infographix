@@ -45,17 +45,25 @@
     .userblock h1 {
         font-size: 3rem;
         margin: 0;
+        white-space: nowrap;
     }
 
     .user button {
-        background-color: #222;
+        background-color: #ff000074;
         color: white;
-        border: 1px solid white;
+        border: 1px solid red;
         height: 100%;
         padding: 2%;
-        font-size: large;
-        font-weight: bold;
+        font-size: medium;
+        font-weight: lighter;
         border-radius: 30px;
+        transition: background-color 500ms, font-size 500ms;
+    }
+
+    .user button:hover {
+        background-color: red;
+        font-weight: bold;
+        font-size: larger;
     }
 
     .big {
@@ -97,7 +105,7 @@
     import { useRoute, useRouter } from 'vue-router';
     import { supabase } from '@/lib/supabase';
     import ErrorBox from '@/components/ErrorBox.vue';
-
+    
     const props = defineProps({
         language: String
     });
@@ -105,10 +113,15 @@
     let user = ref({} as any);
     const route = useRoute();
     const router = useRouter();
-    let user_data = (async () => (await supabase.auth.getUser())?.data?.user)();
-    
+    let user_data = supabase.auth.getUser().then(resp => {
+        if (resp.error){
+            console.clear();
+            router.push('/sign-up');
+        } 
+    })
     if (!route.hash && !user_data) {
-        router.push('/404');
+        console.log(user_data)
+        router.push('/sign-up');
     } else {
         const client_token = route.hash.slice(1).split('&')[0].split('=')[1];
         (async () => {
