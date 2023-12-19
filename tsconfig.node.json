@@ -14,6 +14,7 @@
     "types": ["node"],
     "allowArbitraryExtensions": true,
     "allowJs": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   }
 }

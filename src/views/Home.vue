@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <div class="main">
         <div class="padding"></div>
         <h1 class="big" v-html="lang.header"></h1>
         <div class="center">
-            <video muted autoplay loop src="../assets/videos/showcase.mp4"></video>
+            <!-- <video muted autoplay loop src="../assets/videos/showcase.mp4"></video> -->
         </div>
         <div class="padding"></div>
         <div class="row">
@@ -42,6 +42,7 @@
 
 <script lang="ts">
     import Card from '../components/Card.vue'
+    import anime from 'animejs';
     export default {
         name: "Home",
         components: { Card },
@@ -65,10 +66,10 @@
                     },
                     "th": {
                         "header": "สร้างสื่อ <span class=\"fancy-text\">ในฝัน</span> ด้วย <span class=\"fancy-text\">AI</span>.",
-                        "rep": "ข่ามการทำสิ่ง<span class=\"fancy-text\">ซ้ำ</span>",
+                        "rep": "ข้ามการทำสิ่ง<span class=\"fancy-text\">ซ้ำ</span>",
                         "resp": "ทำได้อย่างรวดเร็ว",
                         "users": "แชร์ให้ทุกคนด้วยลิงก์เดียว",
-                        "ux": "สร้างวิดีโอโดยไม่ต้อวรู้เรื่องไฟล์",
+                        "ux": "สร้างวิดีโอโดยไม่ต้องรู้เรื่องไฟล์",
                         "ai": "พิมพ์ความฝันคุณออกมาเป็นความจริง",
                         "imexport": "ส่งออกเป็น Powerpoint, OBJ, Image file และอีกมากมาย!",
                         "resphead": "รวดเร็ว",
@@ -84,12 +85,48 @@
             lang() {
                 return this.langs[this.language as string];
             }
-        }
+        },
+        mounted() {
+            let d = document.querySelector('.center');
+            let randlist = [...Array(20).keys()].sort(() => .5 - Math.random())
+            for (let i=0; i<10; i++) {
+                let div = document.createElement('div');
+                div.classList.add('box');
+                div.style.minWidth = "10vw";
+                div.style.height = "5vw";
+                div.style.opacity = "0";
+                div.style.borderRadius = "10px 10px";
+                div.style.transform = `rotateX(180deg)`;
+                // let index = Math.floor(Math.random() * 16).toString(16);
+                // div.style.backgroundColor = `#${index.repeat(3)}`
+                div.style.backgroundColor = "#222";
+                div.style.border = "1px solid white";
+                d?.appendChild(div);
+            }
+            anime({
+                targets: ".box",
+                translateX: (_: HTMLElement, i: number, n: number) => 
+                    (i - n/2) * -200
+                ,
+                translateY: () => Math.random() * -600,
+                delay: anime.stagger(100),
+                // scaleX: 5,
+                scale: () => 2 + (Math.random() / 4),
+                rotateX: 0,
+                opacity: 1
+            })
+        },
     }
 </script>
 
 <style scoped>
     @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
+
+    .main {
+        overflow-x: hidden;
+        perspective: 100vw;
+    }
+
     h1 {
         text-align: center;
         font-size: 2rem;
@@ -110,6 +147,12 @@
         display: flex;
         flex-direction: row;
         justify-content: center;
+        min-height: 800px;
+        width: 60vw;
+        margin: auto;
+        align-items: flex-end;
+        gap: 5vw;
+        /* gap: 20px; */
     }
 
     .row {
@@ -143,5 +186,11 @@
 
     p.lol {
         font-size: 4rem;
+    }
+
+    .box {
+        width: 100%;
+        /* height: 100%; */
+        background-color: white;
     }
 </style>

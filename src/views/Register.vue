@@ -12,7 +12,6 @@
     import { supabase } from '@/lib/supabase';
     import { AuthError } from '@supabase/supabase-js';
     import ErrorBox from "../components/ErrorBox.vue";
-import { resourceLimits } from 'worker_threads';
     export default {
         props: ["language"],
         components: { ErrorBox },

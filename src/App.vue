@@ -44,7 +44,7 @@ import { RouterLink, RouterView } from 'vue-router'
     data() {
       return {
         viewWidth: window.innerWidth,
-        lang: "th",
+        lang: "en",
         langs: ["th", "en"],
         change_lang: this.change_lang_gen(),
         lang_store: {
