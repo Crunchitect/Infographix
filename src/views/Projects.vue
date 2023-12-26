@@ -8,6 +8,7 @@
     </div>
     <div class="projects">
         <h1 class="big">Projects</h1>
+        <button><i class="fa-solid fa-add"></i> New Project</button>
     </div>
     <div class="project-panel">
         <p v-if="!(project_data?.data[0])" class="blank">No Projects Found... Maybe create a new one?</p>
@@ -98,7 +99,35 @@
         color: #aaa;
         text-align: center;
     }
-</style>
+
+    .projects {
+        display: flex;
+        align-items: center;
+        flex-flow: row nowrap;
+        gap: clamp(30px, 5%, 50px);
+    }
+
+    .projects button {
+        height: fit-content;
+        outline: none;
+        color: white;
+        background-image: linear-gradient(to right, #02fa02, #13a500);
+        font-size: 1.5rem;
+        border: 1px solid white;
+        border-radius: 30px;
+        padding: 20px;
+        transition: transform 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .projects button:hover {
+        transform: scale(1.2);
+    }
+
+    .projects button:active {
+        transform: scale(0.6);
+    }
+
+    </style>
 
 <script setup lang="ts">
     import { ref } from 'vue';
