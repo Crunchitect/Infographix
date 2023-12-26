@@ -89,11 +89,11 @@
         mounted() {
             let d = document.querySelector('.center');
             let randlist = [...Array(20).keys()].sort(() => .5 - Math.random())
-            for (let i=0; i<10; i++) {
+            for (let i=0; i<18; i++) {
                 let div = document.createElement('div');
                 div.classList.add('box');
-                div.style.minWidth = "10vw";
-                div.style.height = "5vw";
+                div.style.minWidth = "clamp(250px, 10vw, 310px)";
+                div.style.height = "clamp(125px, 10vw, 150px)";
                 div.style.opacity = "0";
                 div.style.borderRadius = "10px 10px";
                 div.style.transform = `rotateX(180deg)`;
@@ -101,14 +101,20 @@
                 // div.style.backgroundColor = `#${index.repeat(3)}`
                 div.style.backgroundColor = "#222";
                 div.style.border = "1px solid white";
+
+                div.innerHTML = randlist[i].toString();
+                console.log(fetch(`/video/${randlist[i]}`))
+
                 d?.appendChild(div);
             }
             anime({
                 targets: ".box",
                 translateX: (_: HTMLElement, i: number, n: number) => 
-                    (i - n/2) * -200
+                   `${(i - n/2) * -150}px`
                 ,
-                translateY: () => Math.random() * -600,
+                translateY: (_: HTMLElement, i: number, n: number) => 
+                    -((i * (Math.random() * 50)) % 600)
+                ,
                 delay: anime.stagger(100),
                 // scaleX: 5,
                 scale: () => 2 + (Math.random() / 4),
@@ -147,11 +153,11 @@
         display: flex;
         flex-direction: row;
         justify-content: center;
-        min-height: 800px;
+        min-height: 600px;
         width: 60vw;
         margin: auto;
         align-items: flex-end;
-        gap: 5vw;
+        gap: clamp(150px, 5vw, 600px);
         /* gap: 20px; */
     }
 
@@ -170,10 +176,6 @@
     .col > p {
         text-align: center;
         font-size: large;
-    }
-
-    .auto {
-        width: 50vw;
     }
 
     .lol {
