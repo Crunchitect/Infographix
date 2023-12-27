@@ -118,3 +118,23 @@ input {
   max-width: 100%;
   max-height: 100%;
 }
+
+.bouncy {
+  height: fit-content;
+  outline: none;
+  color: white;
+  background-image: linear-gradient(to right, #02fa02, #13a500);
+  font-size: 1.5rem;
+  border: 1px solid white;
+  border-radius: 30px;
+  padding: 20px;
+  transition: transform 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bouncy:hover {
+  transform: scale(1.2);
+}
+
+.bouncy:active {
+  transform: scale(0.6);
+}

@@ -1,4 +1,11 @@
 <template>
+    <Dialogue title="New Project" :opened="opened">
+        <p style="font-size: 3rem;">Project Name: </p>
+        <input type="text" placeholder="Untitled Project" v-model="project_name">
+        <br>
+        <br>
+        <button class="new bouncy" @click="new_project(project_name ?? 'Untitled Project')">New Project!</button>
+    </Dialogue>
     <div class="user">
         <div class="userblock">
             <img class="profile" :src="(user?.user_metadata?.avatar_url) ?? 'no'" referrerpolicy="no-referrer">
@@ -8,11 +15,11 @@
     </div>
     <div class="projects">
         <h1 class="big">Projects</h1>
-        <button @click="new_project"><i class="fa-solid fa-add"></i> New Project</button>
+        <button @click="show_modal" class="bouncy"><i class="fa-solid fa-add"></i> New Project</button>
     </div>
     <div class="project-panel">
         <p v-if="!(project_data?.data[0])" class="blank">No Projects Found... Maybe create a new one?</p>
-        <div class="project" :style="`--anim-order: ${index}`" v-for="(project, index) in project_data?.data">
+        <div class="project bouncy" :style="`--anim-order: ${index}`" v-for="(project, index) in project_data?.data">
             <p>{{ project?.name ?? "What the fuck is in ur config?" }}</p>
         </div>
     </div>
@@ -20,6 +27,23 @@
 </template>
 
 <style scoped>
+    .new {
+        background-image: none !important;
+        background-color: #ffffffd3 !important;
+        font-size: 2rem;
+        /* margin: 20px; */
+        border-radius: 10px;
+        outline: none;
+        border: 1px solid black;
+    }
+
+    input {
+        width: 80%;
+        height: 20%;
+        border-radius: 10px;
+        font-size: 3rem;
+    }
+
     .user {
         width: 80vw;
         display: flex;
@@ -73,11 +97,13 @@
     }
 
     .project {
-        background-color: #222;
+        background-image: none !important;
+        border: none !important;
+        background-color: #222 !important;
         padding: 1%;
         border-radius: 10px;
         display: flex;
-        max-width: 200px;
+        /* max-width: 200px; */
         flex-flow: column nowrap;
         animation: showProject 0.5s cubic-bezier(0.58, 0.85, 0.78, 1.29) calc(var(--anim-order) * 100ms) forwards;
         transform: translateX(200%);
@@ -85,6 +111,11 @@
         font-weight: bold;
         margin: 1%;
         text-overflow: clip;
+        aspect-ratio: 16 / 9;
+        display: flex;
+        flex-flow: row wrap;
+        place-content: center;
+        backface-visibility: hidden;
     }
 
     @keyframes showProject {
@@ -107,45 +138,28 @@
         gap: clamp(30px, 5%, 50px);
     }
 
-    .projects button {
-        height: fit-content;
-        outline: none;
-        color: white;
-        background-image: linear-gradient(to right, #02fa02, #13a500);
-        font-size: 1.5rem;
-        border: 1px solid white;
-        border-radius: 30px;
-        padding: 20px;
-        transition: transform 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .projects button:hover {
-        transform: scale(1.2);
-    }
-
-    .projects button:active {
-        transform: scale(0.6);
-    }
-
     .project-panel {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
     }
 
-    </style>
+</style>
 
 <script setup lang="ts">
     import { ref } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { supabase } from '@/lib/supabase';
     import ErrorBox from '@/components/ErrorBox.vue';
+    import Dialogue from '@/components/Dialogue.vue';
     
     const props = defineProps({
         language: String
     });
 
+    let opened = ref(false);
     let user = ref({} as any);
     let error = null as any;
+    let project_name = ref("");
     const route = useRoute();
     const router = useRouter();
     let user_data = supabase.auth.getUser().then(resp => {
@@ -165,6 +179,10 @@
         })();
     }
 
+    const show_modal = () => {
+        opened.value = !opened.value;
+    };
+
     const signout = async () => {
         let { error: error_local } = await supabase.auth.signOut(); 
         if (error_local) {
@@ -174,7 +192,9 @@
         router.push('/');
     };
 
-    const new_project = async () => {
+    const new_project = async (name: string) => {
+        show_modal();
+
         const team_string = [{
                         uid: user.value.id,
                         status: "owner"
@@ -196,7 +216,7 @@
                 .from("Projects")
                 .insert([
                     {
-                        name: "Untitled Project",
+                        name: name,
                         type: "slide",
                         content: {
                             metadata: {
