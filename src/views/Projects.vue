@@ -8,7 +8,7 @@
     </div>
     <div class="projects">
         <h1 class="big">Projects</h1>
-        <button @click=""><i class="fa-solid fa-add"></i> New Project</button>
+        <button @click="new_project"><i class="fa-solid fa-add"></i> New Project</button>
     </div>
     <div class="project-panel">
         <p v-if="!(project_data?.data[0])" class="blank">No Projects Found... Maybe create a new one?</p>
