@@ -127,6 +127,11 @@
         transform: scale(0.6);
     }
 
+    .project-panel {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+    }
+
     </style>
 
 <script setup lang="ts">
