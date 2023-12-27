@@ -8,7 +8,7 @@
     </div>
     <div class="projects">
         <h1 class="big">Projects</h1>
-        <button><i class="fa-solid fa-add"></i> New Project</button>
+        <button @click=""><i class="fa-solid fa-add"></i> New Project</button>
     </div>
     <div class="project-panel">
         <p v-if="!(project_data?.data[0])" class="blank">No Projects Found... Maybe create a new one?</p>
@@ -16,7 +16,7 @@
             <p>{{ project?.name ?? "What the fuck is in ur config?" }}</p>
         </div>
     </div>
-    <ErrorBox v-if="project_data?.error" :msg="project_data?.error"/>
+    <ErrorBox v-if="error" :msg="project_data?.error"/>
 </template>
 
 <style scoped>
@@ -140,6 +140,7 @@
     });
 
     let user = ref({} as any);
+    let error = null as any;
     const route = useRoute();
     const router = useRouter();
     let user_data = supabase.auth.getUser().then(resp => {
@@ -160,13 +161,65 @@
     }
 
     const signout = async () => {
-        let { error } = await supabase.auth.signOut(); 
+        let { error: error_local } = await supabase.auth.signOut(); 
+        if (error_local) {
+            error = "You are stuck here. No changing.";
+            return error;
+        }
         router.push('/');
-        return error;
+    };
+
+    const new_project = async () => {
+        const team_string = [{
+                        uid: user.value.id,
+                        status: "owner"
+                    }];
+        const { data: team_data, error: team_error } = await supabase
+            .from("Teams")
+            .insert([
+                {
+                    team_members: team_string
+                }
+            ])
+            .select();
+        if (team_error) {
+            error = "Please wait until we have a stable connection to the database.";
+            return team_error;
+        }
+        const team_id = team_data[0].id;
+        const { data: proj_data, error: proj_error } = await supabase
+                .from("Projects")
+                .insert([
+                    {
+                        name: "Untitled Project",
+                        type: "slide",
+                        content: {
+                            metadata: {
+                                width: "1920px",
+                                height: "1080px"
+                            },
+                            data: [
+                                [
+                                    {
+                                        id: "1",
+                                        tag: "h1",
+                                        inner_text: "hello"
+                                    }
+                                ],
+                            ]
+                        },
+                        team_id: team_id
+                    }
+                ])
+                .select();
+        if (proj_error) {
+            error = "Please wait until we have a stable connection to the database.";
+            return proj_error;
+        }
     };
 
     let project_data = ref({data: {}, error: null as any} as any);
     (async () => {
-        project_data.value = await supabase.from("Projects").select("name")
+        project_data.value = await supabase.from("Projects").select("name");
     })();
 </script>
