@@ -30,6 +30,11 @@ const router = createRouter({
       path: '/:catchAll(.*)',
       name: 'NotFound',
       component: () => import('../views/NotFound.vue')
+    },
+    {
+      path: '/slide/:id',
+      name: 'Slide',
+      component: () => import('../views/core/Slides.vue')
     }
   ]
 })

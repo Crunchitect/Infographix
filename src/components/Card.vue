@@ -1,7 +1,3 @@
-<script setup>
-
-</script>
-
 <template>
     <div :class="['block', rev ? 'rev' : '']">
         <div class="icon">
@@ -15,11 +11,12 @@
     </div>
 </template>
 
-<script lang="ts">
-    export default {
-        name: 'Card',
-        props: ['heading', 'icon', 'rev']
-    }
+<script setup lang="ts">
+    const props = defineProps({
+        heading: String,
+        icon: String,
+        rev: String
+    });
 </script>
 
 <style scoped>

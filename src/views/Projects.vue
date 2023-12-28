@@ -130,13 +130,13 @@
         router.push(`/project/${proj_data[0].id}`);
     };
 
-    const open_project = async (a: {name: string, id: string}) => {
-        router.push(`/project/${a.id}`)
+    const open_project = async (a: {name: string, id: string, type: string}) => {
+        router.push(`/${a.type}/${a.id}`)
     }
 
     let project_data = ref({data: {}, error: null as any} as any);
     (async () => {
-        project_data.value = await supabase.from("Projects").select("name,id");
+        project_data.value = await supabase.from("Projects").select("name,id,type");
     })();
 </script>
 

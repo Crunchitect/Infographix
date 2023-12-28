@@ -27,9 +27,6 @@
     }
 </style>
 
-<script lang="ts">
-    export default {
-        name: "ErrorBox",
-        props: ["msg"]
-    }
+<script setup lang="ts">
+    const props = defineProps(['msg']);
 </script>
