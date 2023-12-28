@@ -19,12 +19,126 @@
     </div>
     <div class="project-panel">
         <p v-if="!(project_data?.data[0])" class="blank">No Projects Found... Maybe create a new one?</p>
-        <div class="project bouncy" :style="`--anim-order: ${index}`" v-for="(project, index) in project_data?.data">
+        <div 
+            class="project bouncy" 
+            :style="`--anim-order: ${index}`" 
+            @click="open_project(project)"
+            v-for="(project, index) in project_data?.data"
+        >
             <p>{{ project?.name ?? "What the fuck is in ur config?" }}</p>
         </div>
     </div>
     <ErrorBox v-if="error" :msg="project_data?.error"/>
 </template>
+
+<script setup lang="ts">
+    import { ref } from 'vue';
+    import { useRoute, useRouter } from 'vue-router';
+    import { supabase } from '@/lib/supabase';
+    import ErrorBox from '@/components/ErrorBox.vue';
+    import Dialogue from '@/components/Dialogue.vue';
+    
+    const props = defineProps({
+        language: String
+    });
+
+    let opened = ref(false);
+    let user = ref({} as any);
+    let error = null as any;
+    let project_name = ref("");
+    const route = useRoute();
+    const router = useRouter();
+    let user_data = supabase.auth.getUser().then(resp => {
+        if (resp.error){
+            console.clear();
+            router.push('/sign-up');
+        } 
+    })
+    if (!route.hash && !user_data) {
+        console.log(user_data)
+        router.push('/sign-up');
+    } else {
+        const client_token = route.hash.slice(1).split('&')[0].split('=')[1];
+        (async () => {
+            const { data: { user: user_ } } = await supabase.auth.getUser();
+            user.value = user_;
+        })();
+    }
+
+    const show_modal = () => {
+        opened.value = !opened.value;
+    };
+
+    const signout = async () => {
+        let { error: error_local } = await supabase.auth.signOut(); 
+        if (error_local) {
+            error = "You are stuck here. No changing.";
+            return error;
+        }
+        router.push('/');
+    };
+
+    const new_project = async (name: string) => {
+        show_modal();
+
+        const team_string = [{
+                        uid: user.value.id,
+                        status: "owner"
+                    }];
+        const { data: team_data, error: team_error } = await supabase
+            .from("Teams")
+            .insert([
+                {
+                    team_members: team_string
+                }
+            ])
+            .select();
+        if (team_error) {
+            error = "Please wait until we have a stable connection to the database.";
+            return team_error;
+        }
+        const team_id = team_data[0].id;
+        const { data: proj_data, error: proj_error } = await supabase
+                .from("Projects")
+                .insert([
+                    {
+                        name: name,
+                        type: "slide",
+                        content: {
+                            metadata: {
+                                width: "1920px",
+                                height: "1080px"
+                            },
+                            data: [
+                                [
+                                    {
+                                        id: "1",
+                                        tag: "h1",
+                                        inner_text: "hello"
+                                    }
+                                ],
+                            ]
+                        },
+                        team_id: team_id
+                    }
+                ])
+                .select();
+        if (proj_error) {
+            error = "Please wait until we have a stable connection to the database.";
+            return proj_error;
+        }
+        router.push(`/project/${proj_data[0].id}`);
+    };
+
+    const open_project = async (a: {name: string, id: string}) => {
+        router.push(`/project/${a.id}`)
+    }
+
+    let project_data = ref({data: {}, error: null as any} as any);
+    (async () => {
+        project_data.value = await supabase.from("Projects").select("name,id");
+    })();
+</script>
 
 <style scoped>
     .new {
@@ -144,107 +258,3 @@
     }
 
 </style>
-
-<script setup lang="ts">
-    import { ref } from 'vue';
-    import { useRoute, useRouter } from 'vue-router';
-    import { supabase } from '@/lib/supabase';
-    import ErrorBox from '@/components/ErrorBox.vue';
-    import Dialogue from '@/components/Dialogue.vue';
-    
-    const props = defineProps({
-        language: String
-    });
-
-    let opened = ref(false);
-    let user = ref({} as any);
-    let error = null as any;
-    let project_name = ref("");
-    const route = useRoute();
-    const router = useRouter();
-    let user_data = supabase.auth.getUser().then(resp => {
-        if (resp.error){
-            console.clear();
-            router.push('/sign-up');
-        } 
-    })
-    if (!route.hash && !user_data) {
-        console.log(user_data)
-        router.push('/sign-up');
-    } else {
-        const client_token = route.hash.slice(1).split('&')[0].split('=')[1];
-        (async () => {
-            const { data: { user: user_ } } = await supabase.auth.getUser();
-            user.value = user_;
-        })();
-    }
-
-    const show_modal = () => {
-        opened.value = !opened.value;
-    };
-
-    const signout = async () => {
-        let { error: error_local } = await supabase.auth.signOut(); 
-        if (error_local) {
-            error = "You are stuck here. No changing.";
-            return error;
-        }
-        router.push('/');
-    };
-
-    const new_project = async (name: string) => {
-        show_modal();
-
-        const team_string = [{
-                        uid: user.value.id,
-                        status: "owner"
-                    }];
-        const { data: team_data, error: team_error } = await supabase
-            .from("Teams")
-            .insert([
-                {
-                    team_members: team_string
-                }
-            ])
-            .select();
-        if (team_error) {
-            error = "Please wait until we have a stable connection to the database.";
-            return team_error;
-        }
-        const team_id = team_data[0].id;
-        const { data: proj_data, error: proj_error } = await supabase
-                .from("Projects")
-                .insert([
-                    {
-                        name: name,
-                        type: "slide",
-                        content: {
-                            metadata: {
-                                width: "1920px",
-                                height: "1080px"
-                            },
-                            data: [
-                                [
-                                    {
-                                        id: "1",
-                                        tag: "h1",
-                                        inner_text: "hello"
-                                    }
-                                ],
-                            ]
-                        },
-                        team_id: team_id
-                    }
-                ])
-                .select();
-        if (proj_error) {
-            error = "Please wait until we have a stable connection to the database.";
-            return proj_error;
-        }
-    };
-
-    let project_data = ref({data: {}, error: null as any} as any);
-    (async () => {
-        project_data.value = await supabase.from("Projects").select("name");
-    })();
-</script>

@@ -4,35 +4,29 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+    import { ref, onMounted, onBeforeMount } from 'vue';
 
-    export default {
-        name: 'NotFound',
-        data() {
-            return {
-                val: '404',
-                callback: true
-            }
-        },
-        mounted() {
-            this.doThingy()
-        },
-        beforeUnmount() {
-            this.callback = false
-        },
-        methods: {
-            pass(): undefined {
-            },
-            async doThingy() {
-                this.val = '[NOT FOUND]'
-                await new Promise(r => setTimeout(r, 150));
-                this.val = '404'
-                if (this.callback) {
-                    setTimeout(this.doThingy, Math.random() * 5000)
-                }
-            }
+    const val = ref('404');
+    const callback = ref(true);
+
+    onMounted(async () => {
+        doThingy();
+    });
+
+    onBeforeMount(() => {
+        callback.value = false;
+    });
+
+    const doThingy = async () => {
+        val.value = '[NOT FOUND]'
+        await new Promise(r => setTimeout(r, 150));
+        val.value = '404'
+        if (callback.value) {
+            setTimeout(doThingy, Math.random() * 5000)
         }
     }
+
 </script>
 
 <style scoped>

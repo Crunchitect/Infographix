@@ -8,16 +8,24 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+    import { ref, onMounted } from 'vue';
+    import { useRouter } from 'vue-router';
     import { supabase } from '@/lib/supabase';
     import { AuthError } from '@supabase/supabase-js';
     import ErrorBox from "../components/ErrorBox.vue";
-    export default {
-        props: ["language"],
-        components: { ErrorBox },
-        methods: {
-            async signup() {
-                const {data, error} = await supabase.auth.signInWithOAuth({
+
+    const router = useRouter();
+
+    const error = ref(null as (null | string | AuthError));
+
+    const props = defineProps({
+        language: String
+    });
+
+
+    const signup = async () => {
+        const {data, error: error_} = await supabase.auth.signInWithOAuth({
                     provider: "google",
                     options: {
                         queryParams: {
@@ -27,21 +35,14 @@
                     },
                     
                 });
-                this.error = error;
-                // console.log(data, error)
-            }
-        },
-        data() {
-            return {
-                error: null as (null | string | AuthError)
-            }
-        },
-        async mounted() {
-            supabase.auth.getUser().then(resp => {
-                if (!resp.error) this.$router.push('/projects');
-            })
-        }
+        error.value = error_;
     }
+
+    onMounted(() => {
+        supabase.auth.getUser().then(resp => {
+            if (!resp.error) router.push('/projects');
+        })
+    })
 </script>
 
 <style scoped>

@@ -1,10 +1,6 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-</script>
-
 <template>
   <div class="padding"></div>
-  <nav v-if="viewWidth >= navlang.update_width">
+  <nav v-if="viewWidth >= (<number>navlang.update_width)">
     <div class="left">
       <span class="pad"></span>
       <span class="fancy-text"><strong>Infographix</strong></span>
@@ -38,16 +34,17 @@ import { RouterLink, RouterView } from 'vue-router'
   <router-view :language="lang"></router-view>
 </template>
 
-<script lang="ts">
-  export default {
-    name: "App",
-    data() {
-      return {
-        viewWidth: window.innerWidth,
-        lang: "en",
-        langs: ["th", "en"],
-        change_lang: this.change_lang_gen(),
-        lang_store: {
+<script setup lang="ts">
+  import { ref, reactive, onMounted, onUnmounted, computed } from 'vue';
+  import { RouterLink, RouterView } from 'vue-router';
+
+  type LangTable = {"en": {[index: string]: (string | number)}, "th": {[index: string]: (string | number)}};
+
+  const viewWidth = ref(window.innerWidth);
+  const lang = ref("en");
+  const langs = ref(["th", "en"]);
+  const change_lang = ref(change_lang_gen());
+  const lang_store = reactive(<LangTable>{
             "en": {
                 "home": "Home",
                 "projects": "Projects",
@@ -66,38 +63,35 @@ import { RouterLink, RouterView } from 'vue-router'
                 "change_lang": "TH",
                 "update_width": 1230
             }
-        } as {[index: string]:any}
-      }
-    },
-    mounted() {
-      addEventListener('resize', this.getWidth)
-    },
-    unmounted() {
-      removeEventListener('resize', this.getWidth)
-    },
-    methods: {
-      // Syntax is weird
-      *change_lang_gen() {
-          let i=0
-          while (true) {
-            yield this.langs[i]
-            i++; i%=this.langs.length
-          }
-      },
-      getWidth() {
-        this.viewWidth = window.innerWidth
-      },
-      langc() {
-        let lk = this.change_lang.next().value
-        this.lang = lk;
-      }
-    },
-    computed: {
-      navlang() {
-        return this.lang_store[this.lang as string] as any;
-      }
+    });
+
+  const getWidth = () => {
+    viewWidth.value = window.innerWidth
+  }
+
+  onMounted(() => {
+      addEventListener('resize', getWidth);
+  });
+
+  onUnmounted(() => {
+    removeEventListener('resize', getWidth);
+  });
+
+  function* change_lang_gen() {
+    let i=0
+    while (true) {
+      yield langs.value[i]
+      i++; i%=langs.value.length
     }
   }
+
+  const langc = () => {
+    let lk = change_lang.value.next().value
+    lang.value = lk ?? "th";
+  }
+
+  type NoViewWidth = string extends "viewWidth" ? never : string;
+  const navlang = computed(() => lang_store[lang.value as ("en" | "th")] as {[index: string]: (string | number)})
 </script>
 
 <style scoped>

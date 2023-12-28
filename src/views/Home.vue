@@ -35,21 +35,20 @@
 
 <script setup lang="ts">
     import { useRoute, useRouter } from 'vue-router';
+    import { ref, computed, reactive, onMounted } from 'vue';
+    import Card from '../components/Card.vue'
+    import anime from 'animejs';
+
     const route = useRoute();
     const router = useRouter();
     if (route.hash) router.push(`/projects${route.hash}`)
-</script>
 
-<script lang="ts">
-    import Card from '../components/Card.vue'
-    import anime from 'animejs';
-    export default {
-        name: "Home",
-        components: { Card },
-        props: ["language"],
-        data() {
-            return {
-                langs: {
+    const props = defineProps({
+        language: String
+    });
+
+    type LangTable = {"en": {[index: string]: string}, "th": {[index: string]: string}};
+    const langs = reactive(<LangTable>{
                     "en": {
                         "header": "Make your <span class=\"fancy-text\">dream</span> media <span class=\"fancy-text\">fast</span>.",
                         "rep": "<span class=\"fancy-text\">Avoid</span> repetitive patterns",
@@ -78,51 +77,46 @@
                         "aihead": "สร้างสื่อเร็วโดย AI",
                         "imexporthead": "นำเข้า/ส่งออกอย่างง่าย"
                     }
-                } as {[index: string]:any}
-            }
-        },
-        computed: {
-            lang() {
-                return this.langs[this.language as string];
-            }
-        },
-        mounted() {
-            let d = document.querySelector('.center');
-            let randlist = [...Array(20).keys()].sort(() => .5 - Math.random())
-            for (let i=0; i<18; i++) {
-                let div = document.createElement('div');
-                div.classList.add('box');
-                div.style.minWidth = "clamp(250px, 10vw, 310px)";
-                div.style.height = "clamp(125px, 10vw, 150px)";
-                div.style.opacity = "0";
-                div.style.borderRadius = "10px 10px";
-                div.style.transform = `rotateX(180deg)`;
-                // let index = Math.floor(Math.random() * 16).toString(16);
-                // div.style.backgroundColor = `#${index.repeat(3)}`
-                div.style.backgroundColor = "#222";
-                div.style.border = "1px solid white";
+    });
 
-                div.innerHTML = randlist[i].toString();
-                console.log(fetch(`/video/${randlist[i]}`))
+    const lang = computed(() => langs[props.language as ("en" | "th")]);
 
-                d?.appendChild(div);
-            }
-            anime({
-                targets: ".box",
-                translateX: (_: HTMLElement, i: number, n: number) => 
-                   `${(i - n/2) * -150}px`
-                ,
-                translateY: (_: HTMLElement, i: number, n: number) => 
-                    -((i * (Math.random() * 50)) % 600)
-                ,
-                delay: anime.stagger(100),
-                // scaleX: 5,
-                scale: () => 2 + (Math.random() / 4),
-                rotateX: 0,
-                opacity: 1
-            })
-        },
-    }
+    onMounted(() => {
+        let d = document.querySelector('.center');
+        let randlist = [...Array(20).keys()].sort(() => .5 - Math.random())
+        for (let i=0; i<18; i++) {
+            let div = document.createElement('div');
+            div.classList.add('box');
+            div.style.minWidth = "clamp(250px, 10vw, 310px)";
+            div.style.height = "clamp(125px, 10vw, 150px)";
+            div.style.opacity = "0";
+            div.style.borderRadius = "10px 10px";
+            div.style.transform = `rotateX(180deg)`;
+            // let index = Math.floor(Math.random() * 16).toString(16);
+            // div.style.backgroundColor = `#${index.repeat(3)}`
+            div.style.backgroundColor = "#222";
+            div.style.border = "1px solid white";
+
+            div.innerHTML = randlist[i].toString();
+            console.log(fetch(`/video/${randlist[i]}`))
+
+            d?.appendChild(div);
+        }
+        anime({
+            targets: ".box",
+            translateX: (_: HTMLElement, i: number, n: number) => 
+                `${(i - n/2) * -150}px`
+            ,
+            translateY: (_: HTMLElement, i: number, n: number) => 
+                -((i * (Math.random() * 50)) % 600)
+            ,
+            delay: anime.stagger(100),
+            // scaleX: 5,
+            scale: () => 2 + (Math.random() / 4),
+            rotateX: 0,
+            opacity: 1
+        })
+    });
 </script>
 
 <style scoped>
