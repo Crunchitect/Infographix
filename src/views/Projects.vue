@@ -127,7 +127,7 @@
             error = "Please wait until we have a stable connection to the database.";
             return proj_error;
         }
-        router.push(`/project/${proj_data[0].id}`);
+        router.push(`/${proj_data[0].type}/${proj_data[0].id}`);
     };
 
     const open_project = async (a: {name: string, id: string, type: string}) => {
