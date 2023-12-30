@@ -1,24 +1,24 @@
 <template>
-    <Dialogue title="New Project" :opened="opened">
-        <p style="font-size: 3rem;">Project Name: </p>
-        <input type="text" placeholder="Untitled Project" v-model="project_name">
+    <Dialogue :title="lang.new_project" :opened="opened">
+        <p style="font-size: 1.5rem; margin: 0;">{{ lang.project_name }}</p>
+        <input type="text" :placeholder="lang.untitled_project" v-model="project_name">
         <br>
         <br>
-        <button class="new bouncy" @click="new_project(project_name ?? 'Untitled Project')">New Project!</button>
+        <button class="new bouncy" @click="new_project(!project_name ? lang.no_project : project_name)">{{ lang.new_project + "!"}}</button>
     </Dialogue>
     <div class="user">
         <div class="userblock">
             <img class="profile" :src="(user?.user_metadata?.avatar_url) ?? 'no'" referrerpolicy="no-referrer">
-            <h1>{{  (user?.user_metadata?.name) ?? "Loading..."  }}</h1>
+            <h1>{{  (user?.user_metadata?.name) ?? lang.loading  }}</h1>
         </div>
-        <button class="sign-out" @click="signout">Sign Out</button>
+        <button class="sign-out" @click="signout">{{ lang.sign_out }}</button>
     </div>
     <div class="projects">
-        <h1 class="big">Projects</h1>
-        <button @click="show_modal" class="bouncy"><i class="fa-solid fa-add"></i> New Project</button>
+        <h1 class="big">{{ lang.projects }}</h1>
+        <button @click="show_modal" class="bouncy"><i class="fa-solid fa-add"></i> {{ lang.new_project }}</button>
     </div>
     <div class="project-panel">
-        <p v-if="!(project_data?.data[0])" class="blank">No Projects Found... Maybe create a new one?</p>
+        <p v-if="!(project_data?.data[0])" class="blank">{{ lang.no_project }}</p>
         <div 
             class="project bouncy" 
             :style="`--anim-order: ${index}`" 
@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { supabase } from '@/lib/supabase';
     import ErrorBox from '@/components/ErrorBox.vue';
@@ -40,6 +40,31 @@
     
     const props = defineProps({
         language: String
+    });
+
+    const lang = computed(() => {
+        switch (props.language) {
+            case 'en':
+                return {
+                    projects: "Projects",
+                    new_project: "New Project",
+                    untitled_project: "Untitled Project",
+                    loading: "Loading...",
+                    no_project: "No Projects Found... Maybe create a new one?",
+                    project_name: "Project Name",
+                    sign_out: "Sign Out"
+                };
+            default:
+                return {
+                    projects: "โปรเจกต์",
+                    project_name: "โปรเจกต์ชื่อว่า...",
+                    new_project: "สร้างโปรเจกต์ใหม่",
+                    untitled_project: "ไม่มีชื่อ",
+                    loading: "โหลดอยู่ค้าบ",
+                    no_project: "ไม่มีโปรเจกต์เลย... ลองสร้างก่อนไหม :]",
+                    sign_out: "ออกละ ไม่อยู่ละ"
+                }
+        }
     });
 
     let opened = ref(false);
@@ -102,7 +127,7 @@
                 .from("Projects")
                 .insert([
                     {
-                        name: name,
+                        name: name ?? "Untitled Project",
                         type: "slide",
                         content: {
                             metadata: {
@@ -143,8 +168,8 @@
 <style scoped>
     .new {
         background-image: none !important;
-        background-color: #ffffffd3 !important;
-        font-size: 2rem;
+        background-color: #222 !important;
+        font-size: 1rem;
         /* margin: 20px; */
         border-radius: 10px;
         outline: none;
@@ -155,7 +180,7 @@
         width: 80%;
         height: 20%;
         border-radius: 10px;
-        font-size: 3rem;
+        font-size: 1.5rem;
     }
 
     .user {

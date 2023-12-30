@@ -2,13 +2,13 @@
     <div :class="['metadata', opened ? 'op' : 'cl']">
         <div :class="['content', opened ? 'op' : 'cl']">
             <h1>{{ name }}</h1>
-            <p><strong>Size:</strong> 
+            <p><strong>{{ language == 'en' ? "Size" : "ขนาด" }}:</strong> 
                 {{ width }} x {{ height }}
             </p>
         </div>
     </div>
     <div :class="['chevron', opened ? 'op' : 'cl']" @click="toggle">
-        <i class="fa-solid fa-chevron-up fa-2x"></i> 
+        <i class="fa-solid fa-chevron-up fa-xs"></i> 
     </div>
 </template>
 
@@ -18,7 +18,8 @@
     const props = defineProps({
         name: String,
         width: String,
-        height: String
+        height: String,
+        language: String
     });
 
     const opened = ref(true);
@@ -33,7 +34,7 @@
         background-color: #222;
         width: 100vw;
         height: fit-content;
-        max-height: 10vw;
+        max-height: 8vh;
         transition: max-height 250ms ease-out;
     }
 
@@ -53,15 +54,15 @@
     }
 
     .content p {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
 
     .chevron {
         background-color: #222;
         width: fit-content;
-        padding: 5px;
-        padding-left: 20px;
-        padding-right: 20px;
+        padding: 2px;
+        padding-left: 15px;
+        padding-right: 15px;
         border-radius: 30px;
         transform: translateY(-50%);
         margin: auto;
@@ -78,6 +79,10 @@
 
     .content h1 {
         margin: 0;
-        font-size: 2.5rem;
+        font-size: 1.5rem;
+    }
+
+    .content > * {
+        margin: 0;
     }
 </style>
