@@ -2,7 +2,7 @@
     <div class="main">
         <Metadata :name="name" :width="width" :height="height" :language="language" />
         <div class="bottom">
-            <SlideView />
+            <SlideView :slides="slides" :width="width" :height="height" @new_slide="new_slide" />
         </div>
     </div>
 </template>
@@ -10,13 +10,15 @@
 <style scoped>
     .main {
         width: 100vw;
-        height: 90vh;
+        height: 92.2vh;
         display: flex;
         flex-flow: column nowrap;
     }
 
     .bottom {
         flex-grow: 1;
+        display: flex;
+        flex-flow: row nowrap;
     }
 </style>
 
@@ -28,6 +30,15 @@
     import Metadata from "../../components/slides/Metadata.vue";
     import SlideView from "../../components/slides/SlideView.vue";
 
+    type Element = {
+        id: string,
+        tag: string,
+        attrs: {[key: string]: string},
+        content: string,
+        position: {x: number, y: number}
+    };
+    type Slide = Element[];
+
     const props = defineProps({
         language: String
     });
@@ -37,7 +48,7 @@
     const name = ref('Loading...');
     const width = ref('0');
     const height = ref('0');
-    const slides = ref({});
+    const slides = ref([] as Slide[]);
 
     onMounted(async () => {
         const { data: proj_data, error } = await supabase
@@ -57,5 +68,10 @@
 
         slides.value = data.content.data;
     });
+
+    const new_slide = () => {
+        const sid = Math.random().toString();
+        slides.value.push([{id: sid}] as Slide);
+    }
 
 </script>

@@ -7,9 +7,7 @@
             </p>
         </div>
     </div>
-    <div :class="['chevron', opened ? 'op' : 'cl']" @click="toggle">
-        <i class="fa-solid fa-chevron-up fa-xs"></i> 
-    </div>
+    <i :class="['fa-solid', 'fa-chevron-up', 'fa-xs', 'chevron', opened ? 'op' : 'cl']" @click="toggle"></i> 
 </template>
 
 <script lang="ts" setup>
@@ -58,19 +56,20 @@
     }
 
     .chevron {
+        position: absolute;
         background-color: #222;
         width: fit-content;
-        padding: 2px;
-        padding-left: 15px;
-        padding-right: 15px;
+        padding: 15px;
         border-radius: 30px;
+        transition: transform 500ms cubic-bezier(0, 1.07, 0.28, 1.15), top 500ms cubic-bezier(0, 1.07, 0.28, 1.15);
+        top: calc(10vh + 2rem);
+        left: 50vw;
         transform: translateY(-50%);
-        margin: auto;
-        transition: transform 500ms cubic-bezier(0, 1.07, 0.28, 1.15);
     }
 
     .chevron.op {
-        transform: translateY(-50%) rotateX(180deg);
+        top: calc(2vh + 2rem);
+        transform: translateY(50%) rotateX(180deg);
     }
 
     .metadata.op {
