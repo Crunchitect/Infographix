@@ -1,11 +1,12 @@
 <template>
     <div class="flex">
         <div class="slides grid">
-            <div class="item">
+            <div class="slide"></div>
+            <!-- <div class="item">
                 <div class="slide"></div>
-            </div>
+            </div> -->
         </div>
-        <button @click="() => {new_slide(); $emit('new_slide');}"><i class="fa-solid fa-add"></i> New Slide</button>
+        <button><i class="fa-solid fa-add"></i> New Slide</button>
     </div>
 </template>
 
@@ -16,24 +17,24 @@
     }
 
     .slides {
-        width: 15vw;
         height: 97% !important;
         background-color: #181818;
-        /* display: flex;
+        display: flex;
         flex-flow: column nowrap;
-        align-items: center; */
+        align-items: center;
         gap: 10px;
         overflow-y: auto;
+        width: 15vw;
     }
 
     .slides::before, .slides::after { content: "" }
 
     .slide {
-        height: 5vh;
         background-color: white;
         border-radius: 5px;
         aspect-ratio: v-bind(num_width) / v-bind(num_height);
-        /* margin: auto; */
+        min-width: 60%;
+        max-width: 80%;
     }
 
     button {
@@ -49,9 +50,7 @@
 <script lang="ts" setup>
 
     import type { PropType } from 'vue';
-    import { onMounted, ref, watchEffect } from 'vue';
-
-    import Muuri from 'muuri';
+    import { ref, watchEffect } from 'vue';
 
     // This syntax is weird...
     defineEmits<{
@@ -59,11 +58,11 @@
     }>();
 
     type Element = {
-        id: string,
-        tag: string,
-        attrs: {[key: string]: string},
-        content: string,
-        position: {x: number, y: number}
+        id?: string,
+        tag?: string,
+        attrs?: {[key: string]: string},
+        content?: string,
+        position?: {x: number, y: number}
     };
     type Slide = Element[];
 
@@ -73,33 +72,26 @@
         height: String
     });
 
+    const update_slide_ctx = {
+        get() {
+            // TODO: Make it work.
+        },
+        set() {
+            // TODO: Make it work.
+            return false;
+        }
+    };
+
+    let slides_internal = new Proxy({} as Slide[], update_slide_ctx);
     let num_width = ref(0), num_height = ref(0);
-    let new_slide = () => {};
 
     watchEffect(() => {
-        num_width .value = Number((/\d+/g.exec(props.width ?? "1920px")  ?? [0])[0]);
+        num_width .value = Number((/\d+/g.exec(props.width  ?? "1920px") ?? [0])[0]);
         num_height.value = Number((/\d+/g.exec(props.height ?? "1080px") ?? [0])[0]);
     });
 
-    onMounted(() => {
-        let grid = new Muuri('.grid', {
-            dragEnabled: true,
-            layout: {
-                horizontal: false
-            }
-        });
-
-        new_slide = () => {
-            
-            let item = document.createElement('div');
-            item.classList.add('item');
-
-            let slide = document.createElement('div');
-            item.classList.add('slide');
-
-            item.appendChild(slide);
-            grid.add(item);
-        };
-    });
+    watchEffect(() => {
+        props.slides
+    })
 
 </script>

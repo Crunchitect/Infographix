@@ -1,10 +1,12 @@
 <template>
     <Dialogue :title="lang.new_project" :opened="opened">
         <p style="font-size: 1.5rem; margin: 0;">{{ lang.project_name }}</p>
-        <input type="text" :placeholder="lang.untitled_project" v-model="project_name">
-        <br>
-        <br>
-        <button class="new bouncy" @click="new_project(!project_name ? lang.no_project : project_name)">{{ lang.new_project + "!"}}</button>
+        <form @submit.prevent="new_project(!project_name ? lang.no_project : project_name)">
+            <input type="text" :placeholder="lang.untitled_project" v-model="project_name">
+            <br>
+            <br>
+            <button class="new bouncy" @click="new_project(!project_name ? lang.no_project : project_name)">{{ lang.new_project + "!"}}</button>
+        </form>
     </Dialogue>
     <div class="user">
         <div class="userblock">
