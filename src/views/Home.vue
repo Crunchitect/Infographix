@@ -98,7 +98,7 @@
             div.style.border = "1px solid white";
 
             div.innerHTML = randlist[i].toString();
-            console.log(fetch(`/video/${randlist[i]}`))
+            // console.log(fetch(`/video/${randlist[i]}`))
 
             d?.appendChild(div);
         }

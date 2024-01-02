@@ -2,7 +2,8 @@
     <div class="main">
         <Metadata :name="name" :width="width" :height="height" :language="language" />
         <div class="bottom">
-            <SlideView :slides="slides" :width="width" :height="height" @new_slide="new_slide" />
+            <SlideView :slides="slides" :width="width" :height="height" @new_slide="new_slide" @select="select_slide" />
+            <SlideEditor :slide="slides[selected_slide_index]" :width="width" :height="height" />
         </div>
     </div>
 </template>
@@ -26,18 +27,24 @@
     import { ref, onMounted } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { supabase } from "@/lib/supabase";
+    import { generate_uuid_v4 } from '@/lib/generate_uuid';
 
-    import Metadata from "../../components/slides/Metadata.vue";
-    import SlideView from "../../components/slides/SlideView.vue";
+    import Metadata from "@/components/slides/Metadata.vue";
+    import SlideView from "@/components/slides/SlideView.vue";
+    import SlideEditor from '@/components/slides/SlideEditor.vue';
 
     type Element = {
         id: string,
         tag: string,
-        attrs: {[key: string]: string},
-        content: string,
-        position: {x: number, y: number}
+        position: {x: number, y: number},
+        styles?: {[key: string]: string | number | null},
+        attrs?: {[key: string]: string},
+        content?: string,
     };
-    type Slide = Element[];
+    type Slide = {
+        id: string,
+        content: Element[]
+    };
 
     const props = defineProps({
         language: String
@@ -50,6 +57,8 @@
     const height = ref('0');
     const slides = ref([] as Slide[]);
 
+    let selected_slide_index = ref(0);
+
     onMounted(async () => {
         const { data: proj_data, error } = await supabase
             .from("Projects")
@@ -60,7 +69,6 @@
         if (!proj_data) return;
         const data = proj_data[0];
 
-        console.log(data);
 
         name.value = data.name;
         width.value = data.content.metadata.width;
@@ -70,8 +78,12 @@
     });
 
     const new_slide = () => {
-        const sid = Math.random().toString();
-        slides.value.push([{id: sid}] as Slide);
+        const sid = generate_uuid_v4();
+        slides.value.push({id: sid, content:[]} as Slide);
+    }
+
+    const select_slide = (index: number) => {
+        selected_slide_index.value = index;
     }
 
 </script>

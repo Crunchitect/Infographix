@@ -39,6 +39,7 @@
     import { supabase } from '@/lib/supabase';
     import ErrorBox from '@/components/ErrorBox.vue';
     import Dialogue from '@/components/Dialogue.vue';
+    import { generate_uuid_v4 } from '@/lib/generate_uuid';
     
     const props = defineProps({
         language: String
@@ -82,7 +83,6 @@
         } 
     })
     if (!route.hash && !user_data) {
-        console.log(user_data)
         router.push('/sign-up');
     } else {
         const client_token = route.hash.slice(1).split('&')[0].split('=')[1];
@@ -137,13 +137,18 @@
                                 height: "1080px"
                             },
                             data: [
-                                [
-                                    {
-                                        id: "1",
+                                {
+                                    id: generate_uuid_v4(),
+                                    content: [{
+                                        id: generate_uuid_v4(),
                                         tag: "h1",
-                                        inner_text: "hello"
-                                    }
-                                ],
+                                        content: "Hello!",
+                                        position: {
+                                            x: 69,
+                                            y: 420
+                                        }
+                                    }]
+                                },
                             ]
                         },
                         team_id: team_id
