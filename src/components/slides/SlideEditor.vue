@@ -1,8 +1,7 @@
 <template>
     <div class="container">
         <div class="preview">
-            {{ slide }}
-            <SlidePreview 
+            <InnerEditor 
                 :data="slide" 
                 :width="num_width" 
                 :height="num_height"
@@ -37,8 +36,7 @@
 <script lang="ts" setup>
     import { watchEffect, ref, type PropType } from 'vue';
 
-    import SlidePreview from './SlidePreview.vue';
-import { watch } from 'fs';
+    import InnerEditor from '@/components/slides/InnerEditor.vue';
 
     type Element = {
         id: string,

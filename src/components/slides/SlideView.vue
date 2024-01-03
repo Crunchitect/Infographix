@@ -8,14 +8,17 @@
             item-key="id"
             class="slides grid">
             <template #item="{element, index}">
-                <SlidePreview 
-                    :data="element" 
-                    :width="num_width" 
-                    :height="num_height" 
-                    :class="['slide', index == selected_index ? 'fancy' : '']" 
-                    :style="{'--anim-order': index}"
-                    @click="selected(index)"
-                />
+                <div class="flexx">
+                    <p>{{ index + 1 }}</p>
+                    <SlidePreview
+                        :data="element"
+                        :width="num_width"
+                        :height="num_height"
+                        :class="['slide', index == selected_index ? 'fancy' : '']"
+                        :style="{'--anim-order': index}"
+                        @click="selected(index)"
+                    />
+                </div>
             </template>
         </Draggable>
         <button @click="$emit('new_slide')"><i class="fa-solid fa-add"></i> New Slide</button>
@@ -28,12 +31,25 @@
         flex-flow: column nowrap;
     }
 
+    .flexx {
+        display: flex;
+        flex-flow: row nowrap;
+    }
+
+    .flexx p {
+        padding-left: 20px;
+        opacity: 0.8;
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
     .slides {
-        height: 97% !important;
-        max-height: calc(97%) !important;
+        /* height: 97% !important; */
+        /* max-height: calc(97%) !important; */
         background-color: #181818;
         overflow-y: scroll;
         width: 15vw;
+        height: calc(2em + 84.4vh - (5.5vh * v-bind(is_meta_opened)));
     }
 
     .slides::before, .slides::after { content: "" }
@@ -65,7 +81,7 @@
     }
 
     .fancy {
-        border: 2px solid limegreen;
+        border: 5px solid limegreen;
     }
 
     button {
@@ -84,6 +100,10 @@
     import { ref, watchEffect } from 'vue';
     import Draggable from 'vuedraggable';
     import SlidePreview from '@/components/slides/SlidePreview.vue';
+
+    import { metaState } from '@/state/is_meta_opened';
+
+    let is_meta_opened = ref(Number(!metaState.value.is_opened));
 
     let selected_index = ref(0);
 

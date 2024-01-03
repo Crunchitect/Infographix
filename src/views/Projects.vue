@@ -5,7 +5,7 @@
             <input type="text" :placeholder="lang.untitled_project" v-model="project_name">
             <br>
             <br>
-            <button class="new bouncy" @click="new_project(!project_name ? lang.no_project : project_name)">{{ lang.new_project + "!"}}</button>
+            <button class="new bouncy">{{ lang.new_project + "!"}}</button>
         </form>
     </Dialogue>
     <div class="user">

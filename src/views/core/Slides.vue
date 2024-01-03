@@ -28,6 +28,7 @@
     import { useRoute, useRouter } from 'vue-router';
     import { supabase } from "@/lib/supabase";
     import { generate_uuid_v4 } from '@/lib/generate_uuid';
+    import { unproxify } from '@/lib/unproxify';
 
     import Metadata from "@/components/slides/Metadata.vue";
     import SlideView from "@/components/slides/SlideView.vue";
@@ -57,6 +58,9 @@
     const height = ref('0');
     const slides = ref([] as Slide[]);
 
+    const metadata = ref({} as {[key: string]: any});
+    const loading_done = ref(false);
+
     let selected_slide_index = ref(0);
 
     onMounted(async () => {
@@ -73,8 +77,11 @@
         name.value = data.name;
         width.value = data.content.metadata.width;
         height.value = data.content.metadata.height;
+        metadata.value = data.content.metadata;
 
         slides.value = data.content.data;
+
+        loading_done.value = true;
     });
 
     const new_slide = () => {
@@ -85,5 +92,24 @@
     const select_slide = (index: number) => {
         selected_slide_index.value = index;
     };
+
+    setInterval(async () => {
+        if (!loading_done.value) return "cope";
+        const slug = {
+            name: name.value,
+            type: "slide",
+            content: {
+                metadata: unproxify(metadata.value),
+                data: unproxify(slides.value)
+            }
+        };
+        const { data, error } = await supabase
+                                    .from("Projects")
+                                    .update({
+                                        content: slug.content
+                                    })
+                                    .eq("id", route.params.id)
+                                    .select();
+    }, 500);
 
 </script>

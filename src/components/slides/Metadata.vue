@@ -12,6 +12,7 @@
 
 <script lang="ts" setup>
     import { ref } from 'vue';
+    import { metaState } from '@/state/is_meta_opened';
 
     const props = defineProps({
         name: String,
@@ -24,7 +25,8 @@
 
     const toggle = () => {
         opened.value = !opened.value;
-    }
+        metaState.value.set_is_opened(opened.value);
+    };
 </script>
 
 <style scoped>
