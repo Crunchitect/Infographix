@@ -30,18 +30,20 @@
 
     .slides {
         height: 97% !important;
+        max-height: calc(97%) !important;
         background-color: #181818;
-        display: flex;
-        flex-flow: column nowrap;
-        align-items: center;
-        gap: 10px;
-        overflow-y: auto;
+        overflow-y: scroll;
         width: 15vw;
     }
 
     .slides::before, .slides::after { content: "" }
 
     .slide {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        overflow: hidden;
         display:block;
         z-index: 69420;
         background-color: white;

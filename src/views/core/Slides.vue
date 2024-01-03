@@ -80,10 +80,10 @@
     const new_slide = () => {
         const sid = generate_uuid_v4();
         slides.value.push({id: sid, content:[]} as Slide);
-    }
+    };
 
     const select_slide = (index: number) => {
         selected_slide_index.value = index;
-    }
+    };
 
 </script>

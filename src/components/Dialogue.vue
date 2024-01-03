@@ -45,7 +45,7 @@
         padding: 20px;
         border-radius: 10px;
         width: 50vw;
-        height: clamp(calc(fit-content), 40vh, 40vh);
+        height: fit-content;
         margin: 10%;
         z-index: 69421;
     }
