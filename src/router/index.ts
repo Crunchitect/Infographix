@@ -35,6 +35,11 @@ const router = createRouter({
       path: '/slide/:id',
       name: 'Slide',
       component: () => import('../views/core/Slides.vue')
+    },
+    {
+      path: '/about',
+      name: 'About',
+      component: () => import('../views/About.vue')
     }
   ]
 })
