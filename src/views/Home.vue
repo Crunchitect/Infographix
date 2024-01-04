@@ -2,8 +2,8 @@
     <div class="main">
         <div class="padding"></div>
         <h1 class="big" v-html="lang.header"></h1>
-        <div class="center">
-            <!-- <video muted autoplay loop src="../assets/videos/showcase.mp4"></video> -->
+        <div class="centerx">
+            <video muted autoplay loop src="../assets/videos/showcase.mp4"></video>
         </div>
         <div class="padding"></div>
         <div class="row">
@@ -144,6 +144,18 @@
     }
 
     .center {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        min-height: 600px;
+        width: 60vw;
+        margin: auto;
+        align-items: flex-end;
+        gap: clamp(150px, 5vw, 600px);
+        /* gap: 20px; */
+    }
+
+    .centerx {
         display: flex;
         flex-direction: row;
         justify-content: center;

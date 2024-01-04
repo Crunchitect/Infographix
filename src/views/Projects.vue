@@ -145,7 +145,9 @@
                                         content: "Hello!",
                                         position: {
                                             x: 69,
-                                            y: 420
+                                            y: 420,
+                                            w: 420,
+                                            h: 69
                                         }
                                     }]
                                 },

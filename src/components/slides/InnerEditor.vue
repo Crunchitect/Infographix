@@ -1,5 +1,39 @@
-<template>
-    <div ref="ctx" class="ctx"></div>
+<!-- 
+    The $refs thing is only i know... but it gets the job done quite amazingly, actually.
+    https://stackoverflow.com/questions/55379483/can-you-pass-an-element-to-a-function-within-the-template-in-vue
+-->
+<template v-if="$refs">
+    <div ref="ctx" class="ctx">
+        <DraggableResizableVue
+            v-for="(element, index) in data?.content"
+            @dragging="(x: number, y: number) => edit_pos(x, y, (<HTMLElement[]>$refs[`draggable${index}`]))"
+            @resizing="
+                (x: number, y: number, w: number, h: number) => 
+                    edit_scale(x, y, w, h, (<HTMLElement[]>$refs[`draggable${index}`]))
+            "
+            v-model:x="element.position.x"
+            v-model:y="element.position.y"
+            v-model:w="element.position.w"
+            v-model:h="element.position.h"
+        >
+            <component 
+                :ref="`draggable${index}`"
+                :is="element.tag" 
+                :id="element.id"
+                :style="{
+                    ...element.styles,
+                    color: 'black',
+                    'font-size': `${element.position.h / 3}px`,
+                    'text-align': 'center'
+                }"
+                v-bind="element.attrs"
+                contenteditable
+                @input="edit_content"
+            >
+                {{ element.content }}
+            </component>
+        </DraggableResizableVue>
+    </div>
 </template>
 
 <style scoped>
@@ -15,12 +49,17 @@
 </style>
 
 <script lang="ts" setup>
-    import { type PropType, ref, watchEffect, onMounted } from 'vue';
+    import type { PropType } from 'vue';
+    import { getCaretPosition } from '@/lib/caret_position';
+
+    // @ts-ignore
+    import DraggableResizableVue from 'draggable-resizable-vue3';
 
     type Element = {
         id: string,
         tag: string,
-        position: {x: number, y: number},
+        position: {x: number, y: number, w: number, h: number},
+
         styles?: {[key: string]: string | number | null},
         attrs?: {[key: string]: string},
         content?: string,
@@ -39,37 +78,23 @@
         log: String
     });
 
-    const ctx = ref(null as null | HTMLElement);
-    let is_mounted = ref(false);
+    const emit = defineEmits<{
+        (e: "drag", x: number, y: number, id: string): void,
+        (e: "resize", x: number, y: number, w: number, h: number, id: string): void,
+        (e: "content", content: string, caret_pos: number, id: string): void
+    }>();
 
-    const instantiate_ctx = () => {
-        if (!Array.isArray(props.data?.content)) return "cope";
-        if (ctx.value) ctx.value.innerHTML = '';
-        if (!props.data?.content) return;
-        for (const element of props.data.content) {
-            const elem_dom = document.createElement(element.tag);
-            elem_dom.id = element.id;
-            elem_dom.innerText = element.content ?? "";
-
-            elem_dom.style.position = 'absolute';
-            const left = (element.position.x / ((props.width)  ?? 100)) * 100;
-            const top  = (element.position.y / ((props.height) ?? 100)) * 100;
-            elem_dom.style.top = `${top}%`;
-            elem_dom.style.left = `${left}%`;
-            // TODO: Make it  variable
-            elem_dom.style.color = 'black';
-
-            if (ctx.value) ctx.value.appendChild(elem_dom);
-        }
+    const edit_pos = (left: number, top: number, ref: HTMLElement[]) => {
+        emit("drag", left, top, ref[0].id);
     };
 
-    watchEffect(() => {
-        if (!is_mounted) return;
-        instantiate_ctx();
-    });
+    const edit_scale = (x: number, y: number, w: number, h: number, ref: HTMLElement[]) => {
+        ref[0].style.fontSize = `${h/3}px`;
+        emit("resize", x, y, w, h, ref[0].id);
+    };
 
-    onMounted(() => {
-        is_mounted.value = true;
-        instantiate_ctx();
-    });
+    const edit_content = (e: InputEvent) => {
+        const target = <HTMLElement>e.target;
+        emit("content", target.innerText, getCaretPosition(), target.id);
+    }
 </script>

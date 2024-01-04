@@ -1,9 +1,29 @@
 <template>
     <div class="main">
-        <Metadata :name="name" :width="width" :height="height" :language="language" />
+        <Metadata
+            :name="name"
+            :width="width"
+            :height="height"
+            :language="language"
+        />
         <div class="bottom">
-            <SlideView :slides="slides" :width="width" :height="height" @new_slide="new_slide" @select="select_slide" />
-            <SlideEditor :slide="slides[selected_slide_index]" :width="width" :height="height" />
+            <SlideView
+                :slides="slides"
+                :width="width"
+                :height="height"
+                @new_slide="new_slide"
+                @select="select_slide"
+                @delete_slide="delete_slide"
+            />
+            <SlideEditor
+                :slide="slides[selected_slide_index]"
+                :width="width" 
+                :height="height"
+                @drag="drag"
+                @resize="resize"
+                @content="content"
+                @new_elem="new_elem"
+            />
         </div>
     </div>
 </template>
@@ -24,7 +44,7 @@
 </style>
 
 <script setup lang="ts">
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, watchEffect } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { supabase } from "@/lib/supabase";
     import { generate_uuid_v4 } from '@/lib/generate_uuid';
@@ -34,10 +54,12 @@
     import SlideView from "@/components/slides/SlideView.vue";
     import SlideEditor from '@/components/slides/SlideEditor.vue';
 
+    import { getCaretPosition, setCaretPosition } from '@/lib/caret_position';
+
     type Element = {
         id: string,
         tag: string,
-        position: {x: number, y: number},
+        position: {x: number, y: number, w: number, h: number},
         styles?: {[key: string]: string | number | null},
         attrs?: {[key: string]: string},
         content?: string,
@@ -62,6 +84,7 @@
     const loading_done = ref(false);
 
     let selected_slide_index = ref(0);
+    let times_updated = ref(0);
 
     onMounted(async () => {
         const { data: proj_data, error } = await supabase
@@ -93,7 +116,85 @@
         selected_slide_index.value = index;
     };
 
-    setInterval(async () => {
+    const delete_slide = (id: string) => {
+        slides.value = slides.value.filter(slide => slide.id !== id);
+    };
+
+    const drag = (x: number, y: number, id: string) => {
+        times_updated.value++;
+        if (times_updated.value % 500) return "Too Early";
+        slides.value = slides.value.map(slide => {
+            return {
+                id: slide.id,
+                content: slide.content.map(element => {
+                    if (element.id == id) {
+                        element.position.x = x;
+                        element.position.y = y;
+                    }
+                    return element;
+                })
+            };
+        });
+    };
+
+    const resize = (x: number, y: number, w: number, h: number, id: string) => {
+        times_updated.value++;
+        if (times_updated.value % 500) return "Too Early";
+        slides.value = slides.value.map(slide => {
+            return {
+                id: slide.id,
+                content: slide.content.map(element => {
+                    if (element.id == id) {
+                        element.position.x = x;
+                        element.position.y = y;
+                        element.position.w = w;
+                        element.position.h = h;
+                    }
+                    return element;
+                })
+            };
+        });
+    };
+
+    const content = (content: string, caret_pos: number, id: string) => {
+        slides.value = slides.value.map(slide => {
+            return {
+                id: slide.id,
+                content: slide.content.map(element => {
+                    if (element.id == id) {
+                        element.content = content;
+                        
+                    }
+                    return element;
+                })
+            };
+        });
+        focus_caret(id, caret_pos);
+    };
+
+    const new_elem = (tag: string, id: string) => {
+        slides.value = slides.value.map(slide => {
+            return {
+                id: slide.id,
+                content: (slide.id == id) ? [...slide.content, <Element>{
+                    id: generate_uuid_v4(),
+                    tag: tag,
+                    position: {
+                        x: 69, y: 420, w: 420, h: 69
+                    },
+                    content: "Insert text here...."
+                }] : slide.content
+            };
+        });
+    };
+
+    const focus_caret = (id: string, caret_pos: number) => {
+        document.getElementById(id)?.focus();
+        setCaretPosition(caret_pos);
+    };
+
+    watchEffect(async () => {
+        console.log("updated server");
         if (!loading_done.value) return "cope";
         const slug = {
             name: name.value,
@@ -110,6 +211,6 @@
                                     })
                                     .eq("id", route.params.id)
                                     .select();
-    }, 500);
+    });
 
 </script>

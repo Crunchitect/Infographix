@@ -9,7 +9,14 @@
             class="slides grid">
             <template #item="{element, index}">
                 <div class="flexx">
-                    <p>{{ index + 1 }}</p>
+                    <p 
+                        class="delete-p"
+                        @mouseenter="show_trash_can"
+                        @mouseleave="show_number($event, index + 1)"
+                        @click="delete_slide(element)"
+                    >
+                        {{ index + 1 }}
+                    </p>
                     <SlidePreview
                         :data="element"
                         :width="num_width"
@@ -36,11 +43,17 @@
         flex-flow: row nowrap;
     }
 
-    .flexx p {
+    .flexx .delete-p {
         padding-left: 20px;
-        opacity: 0.8;
+        /* opacity: 0.8; */
+        color: #fffa;
         font-weight: 700;
         font-size: 1.2rem;
+        transition: color 500ms ease-out;
+    }
+
+    .delete-p:hover {
+        color: red;
     }
 
     .slides {
@@ -106,17 +119,17 @@
     let is_meta_opened = ref(Number(!metaState.value.is_opened));
 
     let selected_index = ref(0);
-
     // This syntax is weird...
     const emits = defineEmits<{
         (e: "new_slide"): void,
-        (e: "select", value: number): void
+        (e: "select", value: number): void,
+        (e: "delete_slide", id: string): void
     }>();
 
     type Element = {
         id: string,
         tag: string,
-        position: {x: number, y: number},
+        position: {x: number, y: number, w: number, h: number},
         styles?: {[key: string]: string | number | null},
         attrs?: {[key: string]: string},
         content?: string,
@@ -144,6 +157,18 @@
     const selected = (index: number) => {
         selected_index.value = index;
         emits("select", index);
-    }
+    };
+
+    const show_trash_can = (e: MouseEvent) => {
+        (<HTMLElement>e.target).innerHTML = '<i class="fa-solid fa-trash fa-sm"></i>'
+    };
+
+    const show_number = (e: MouseEvent, index: number) => {
+        (<HTMLElement>e.target).innerHTML = index.toString();
+    };
+
+    const delete_slide = (slide: Slide) => {
+        emits("delete_slide", slide.id);
+    };
 
 </script>

@@ -15,7 +15,7 @@
     type Element = {
         id: string,
         tag: string,
-        position: {x: number, y: number},
+        position: {x: number, y: number, w: number, h: number},
         styles?: {[key: string]: string | number | null},
         attrs?: {[key: string]: string},
         content?: string,
