@@ -58,8 +58,6 @@
     import { watchEffect, ref, type PropType } from 'vue';
 
     import InnerEditor from '@/components/slides/InnerEditor.vue';
-import { preProcessFile } from 'typescript';
-
     type Element = {
         id: string,
         tag: string,

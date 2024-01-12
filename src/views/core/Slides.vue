@@ -55,6 +55,7 @@
     import SlideEditor from '@/components/slides/SlideEditor.vue';
 
     import { getCaretPosition, setCaretPosition } from '@/lib/caret_position';
+import { isDebuggerStatement } from 'typescript';
 
     type Element = {
         id: string,
@@ -68,6 +69,7 @@
         id: string,
         content: Element[]
     };
+    type AnytoAny = {[key: string]: any};
 
     const props = defineProps({
         language: String
@@ -79,8 +81,10 @@
     const width = ref('0');
     const height = ref('0');
     const slides = ref([] as Slide[]);
+    const state = ref('idk');
+    const state_obj = ref(<AnytoAny>{})
 
-    const metadata = ref({} as {[key: string]: any});
+    const metadata = ref(<AnytoAny>{});
     const loading_done = ref(false);
 
     let selected_slide_index = ref(0);
@@ -110,6 +114,7 @@
     const new_slide = () => {
         const sid = generate_uuid_v4();
         slides.value.push({id: sid, content:[]} as Slide);
+        state.value = 'new_slide';
     };
 
     const select_slide = (index: number) => {
@@ -118,6 +123,7 @@
 
     const delete_slide = (id: string) => {
         slides.value = slides.value.filter(slide => slide.id !== id);
+        state.value = 'delete_slide';
     };
 
     const drag = (x: number, y: number, id: string) => {
@@ -135,6 +141,7 @@
                 })
             };
         });
+        state.value = 'drag';
     };
 
     const resize = (x: number, y: number, w: number, h: number, id: string) => {
@@ -154,6 +161,7 @@
                 })
             };
         });
+        state.value = 'resize';
     };
 
     const content = (content: string, caret_pos: number, id: string) => {
@@ -169,7 +177,9 @@
                 })
             };
         });
-        focus_caret(id, caret_pos);
+        state.value = 'content';
+        state_obj.value = {id: id, caret_pos: caret_pos};
+        // focus_caret(id, caret_pos);
     };
 
     const new_elem = (tag: string, id: string) => {
@@ -186,9 +196,11 @@
                 }] : slide.content
             };
         });
+        state.value = 'new_elem';
     };
 
     const focus_caret = (id: string, caret_pos: number) => {
+        console.log(document.getElementById(id));
         document.getElementById(id)?.focus();
         setCaretPosition(caret_pos);
     };
@@ -204,13 +216,17 @@
                 data: unproxify(slides.value)
             }
         };
-        const { data, error } = await supabase
-                                    .from("Projects")
-                                    .update({
-                                        content: slug.content
-                                    })
-                                    .eq("id", route.params.id)
-                                    .select();
+        const { caret_pos, id } = state_obj.value;
+        // if (state.value === 'content') focus_caret(<string>id, <number>caret_pos);
+        supabase
+            .from("Projects")
+            .update({
+                content: slug.content
+            })
+            .eq("id", route.params.id)
+            .select();
+        if (state.value === 'content') focus_caret(<string>id, <number>caret_pos);
+        // debugger;
     });
 
 </script>

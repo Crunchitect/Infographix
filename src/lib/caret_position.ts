@@ -1,4 +1,36 @@
+const createRange = (node: Node, targetPosition: number) => {
+  let range = document.createRange();
+  range.selectNode(node);
+
+  let pos = 0;
+  const stack = [node];
+  while (stack.length > 0) {
+      const current = stack.pop();
+
+      if (current?.nodeType === Node.TEXT_NODE) {
+          const len = current?.textContent?.length ?? 0;
+          if (pos + len >= targetPosition) {
+            // range.setStart(current, targetPosition - pos);
+            range.setStart(current, targetPosition - pos);
+            range.setEnd(current, targetPosition - pos);
+              return range;
+          }
+          pos += len;
+      } else if (current?.childNodes && current.childNodes.length > 0) {
+          for (let i = current.childNodes.length - 1; i >= 0; i--) {
+              stack.push(current.childNodes[i]);
+          }
+      }
+  }
+
+  // The target position is greater than the
+  // length of the contenteditable element.
+  range.setEnd(node, node.childNodes.length);
+  return range;
+};
+
 export const getCaretPosition = () => {
+    // return -1;
     if (<any>window.getSelection && (<any>window).getSelection().getRangeAt) {
       var range = (<any>window).getSelection().getRangeAt(0);
       var selectedObj = (<any>window).getSelection();
@@ -19,15 +51,14 @@ export const getCaretPosition = () => {
     return -1;
 };
 
+
 export const setCaretPosition = (target_pos: number) => {
-    if (<any>window.getSelection && (<any>window).getSelection().getRangeAt) {
-      var range = (<any>window).getSelection().getRangeAt(0);
-      var selectedObj = (<any>window).getSelection();
-      var obj = (<any>selectedObj).anchorNode.parentNode.childNodes[0];
-      range.setStart(obj, target_pos);
-      range.collapse(true);
-    
-      selectedObj.removeAllRanges();
-      selectedObj.addRange(range);
-    }
+  console.log(document.activeElement)
+  const range = createRange(document.activeElement ?? new Node(), target_pos);
+  const selection = window.getSelection();
+  selection?.removeAllRanges();
+  selection?.addRange(range);
+  
+  // debugger;
 };
+
