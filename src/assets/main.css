@@ -140,3 +140,26 @@ input {
 .bouncy:active {
   transform: scale(0.6);
 }
+
+.handle {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+
+.handle-rot {
+  display: block !important;
+  background: none !important;
+  left: calc(50% - 4px);
+  bottom: 130%;
+}
+
+.handle-rot::before {
+  background-color: none !important;
+}
+
+.handle-rot::after {
+  top: 25% !important;
+  left: 75% !important;
+  background-color: none !important;
+}

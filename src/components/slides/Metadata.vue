@@ -1,7 +1,14 @@
 <template>
     <div :class="['metadata', opened ? 'op' : 'cl']">
         <div :class="['content', opened ? 'op' : 'cl']">
-            <h1>{{ name }}</h1>
+            <h1>{{ name }} <span class="status">
+                <span v-if="status == 0">
+                    <CloudSaving />
+                </span>
+                <span v-else>
+                    <CloudSaved />
+                </span>
+            </span></h1>
             <p><strong>{{ language == 'en' ? "Size" : "ขนาด" }}:</strong> 
                 {{ width }} x {{ height }}
             </p>
@@ -11,14 +18,18 @@
 </template>
 
 <script lang="ts" setup>
-    import { ref } from 'vue';
+    import { computed, ref } from 'vue';
     import { metaState } from '@/state/is_meta_opened';
+
+    import CloudSaving from '@/components/icons/CloudSaving.vue';
+    import CloudSaved from '@/components/icons/CloudSaved.vue';
 
     const props = defineProps({
         name: String,
         width: String,
         height: String,
-        language: String
+        language: String,
+        cloud_status: Number
     });
 
     const opened = ref(true);
@@ -27,6 +38,8 @@
         opened.value = !opened.value;
         metaState.value.set_is_opened(opened.value);
     };
+
+   const status = computed(() => props.cloud_status);
 </script>
 
 <style scoped>

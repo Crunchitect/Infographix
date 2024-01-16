@@ -33,8 +33,8 @@
     }
 
     .icon {
-        width: 10vh;
-        height: 10vh;
+        width: 25%;
+        aspect-ratio: 1 / 1;
         background-color: #222;
         display: flex;
         flex-flow: column wrap;

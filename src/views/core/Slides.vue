@@ -5,6 +5,7 @@
             :width="width"
             :height="height"
             :language="language"
+            :cloud_status="cloud_status"
         />
         <div class="bottom">
             <SlideView
@@ -14,13 +15,16 @@
                 @new_slide="new_slide"
                 @select="select_slide"
                 @delete_slide="delete_slide"
+                :language="language"
             />
             <SlideEditor
                 :slide="slides[selected_slide_index]"
                 :width="width" 
                 :height="height"
+                :language="language"
                 @drag="drag"
                 @resize="resize"
+                @rotate="rotate"
                 @content="content"
                 @new_elem="new_elem"
             />
@@ -44,7 +48,7 @@
 </style>
 
 <script setup lang="ts">
-    import { ref, onMounted, watchEffect } from 'vue';
+    import { ref, onMounted, watch } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { supabase } from "@/lib/supabase";
     import { generate_uuid_v4 } from '@/lib/generate_uuid';
@@ -54,22 +58,7 @@
     import SlideView from "@/components/slides/SlideView.vue";
     import SlideEditor from '@/components/slides/SlideEditor.vue';
 
-    import { getCaretPosition, setCaretPosition } from '@/lib/caret_position';
-import { isDebuggerStatement } from 'typescript';
-
-    type Element = {
-        id: string,
-        tag: string,
-        position: {x: number, y: number, w: number, h: number},
-        styles?: {[key: string]: string | number | null},
-        attrs?: {[key: string]: string},
-        content?: string,
-    };
-    type Slide = {
-        id: string,
-        content: Element[]
-    };
-    type AnytoAny = {[key: string]: any};
+    import type { Slide, Element, AnytoAny } from '@/lib/types';
 
     const props = defineProps({
         language: String
@@ -81,16 +70,16 @@ import { isDebuggerStatement } from 'typescript';
     const width = ref('0');
     const height = ref('0');
     const slides = ref([] as Slide[]);
-    const state = ref('idk');
-    const state_obj = ref(<AnytoAny>{})
 
     const metadata = ref(<AnytoAny>{});
     const loading_done = ref(false);
+    const cloud_status = ref(0);
 
     let selected_slide_index = ref(0);
-    let times_updated = ref(0);
 
     onMounted(async () => {
+
+        
         const { data: proj_data, error } = await supabase
             .from("Projects")
             .select('*')
@@ -114,7 +103,6 @@ import { isDebuggerStatement } from 'typescript';
     const new_slide = () => {
         const sid = generate_uuid_v4();
         slides.value.push({id: sid, content:[]} as Slide);
-        state.value = 'new_slide';
     };
 
     const select_slide = (index: number) => {
@@ -123,12 +111,9 @@ import { isDebuggerStatement } from 'typescript';
 
     const delete_slide = (id: string) => {
         slides.value = slides.value.filter(slide => slide.id !== id);
-        state.value = 'delete_slide';
     };
 
     const drag = (x: number, y: number, id: string) => {
-        times_updated.value++;
-        if (times_updated.value % 500) return "Too Early";
         slides.value = slides.value.map(slide => {
             return {
                 id: slide.id,
@@ -141,12 +126,9 @@ import { isDebuggerStatement } from 'typescript';
                 })
             };
         });
-        state.value = 'drag';
     };
 
     const resize = (x: number, y: number, w: number, h: number, id: string) => {
-        times_updated.value++;
-        if (times_updated.value % 500) return "Too Early";
         slides.value = slides.value.map(slide => {
             return {
                 id: slide.id,
@@ -161,7 +143,20 @@ import { isDebuggerStatement } from 'typescript';
                 })
             };
         });
-        state.value = 'resize';
+    };
+
+    const rotate = (r: number, id: string) => {
+        slides.value = slides.value.map(slide => {
+            return {
+                id: slide.id,
+                content: slide.content.map(element => {
+                    if (element.id == id) {
+                        element.position.r = r;
+                    }
+                    return element;
+                })
+            };
+        });
     };
 
     const content = (content: string, caret_pos: number, id: string) => {
@@ -177,9 +172,6 @@ import { isDebuggerStatement } from 'typescript';
                 })
             };
         });
-        state.value = 'content';
-        state_obj.value = {id: id, caret_pos: caret_pos};
-        // focus_caret(id, caret_pos);
     };
 
     const new_elem = (tag: string, id: string) => {
@@ -196,17 +188,11 @@ import { isDebuggerStatement } from 'typescript';
                 }] : slide.content
             };
         });
-        state.value = 'new_elem';
     };
 
-    const focus_caret = (id: string, caret_pos: number) => {
-        console.log(document.getElementById(id));
-        document.getElementById(id)?.focus();
-        setCaretPosition(caret_pos);
-    };
-
-    watchEffect(async () => {
-        console.log("updated server");
+    watch(slides, async () => {
+        cloud_status.value = 0;
+        // console.log("updated server");
         if (!loading_done.value) return "cope";
         const slug = {
             name: name.value,
@@ -216,17 +202,14 @@ import { isDebuggerStatement } from 'typescript';
                 data: unproxify(slides.value)
             }
         };
-        const { caret_pos, id } = state_obj.value;
-        // if (state.value === 'content') focus_caret(<string>id, <number>caret_pos);
-        supabase
+        await supabase
             .from("Projects")
             .update({
                 content: slug.content
             })
             .eq("id", route.params.id)
             .select();
-        if (state.value === 'content') focus_caret(<string>id, <number>caret_pos);
-        // debugger;
+        cloud_status.value = 1;
     });
 
 </script>

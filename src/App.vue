@@ -37,8 +37,7 @@
 <script setup lang="ts">
   import { ref, reactive, onMounted, onUnmounted, computed } from 'vue';
   import { RouterLink, RouterView } from 'vue-router';
-
-  type LangTable = {"en": {[index: string]: (string | number)}, "th": {[index: string]: (string | number)}};
+  import type { LangTable } from '@/lib/types';
 
   const viewWidth = ref(window.innerWidth);
   const lang = ref("en");
@@ -90,7 +89,7 @@
     lang.value = lk ?? "th";
   }
 
-  type NoViewWidth = string extends "viewWidth" ? never : string;
+  
   const navlang = computed(() => lang_store[lang.value as ("en" | "th")] as {[index: string]: (string | number)})
 </script>
 

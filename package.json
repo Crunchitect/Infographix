@@ -11,8 +11,8 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false"
   },
   "dependencies": {
+    "@gausszhou/vue3-drag-resize-rotate": "^3.0.2",
     "@supabase/supabase-js": "^2.39.0",
-    "draggable-resizable-vue3": "^1.0.94-beta",
     "muuri": "^0.9.5",
     "supabase": "^1.115.5",
     "vite": "^5.0.10",

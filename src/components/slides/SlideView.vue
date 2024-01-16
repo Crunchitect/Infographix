@@ -8,12 +8,12 @@
             item-key="id"
             class="slides grid">
             <template #item="{element, index}">
-                <div class="flexx">
+                <div :class="['flexx', `slide${index}`]">
                     <p 
                         class="delete-p"
                         @mouseenter="show_trash_can"
                         @mouseleave="show_number($event, index + 1)"
-                        @click="delete_slide(element)"
+                        @click="delete_slide(index, element)"
                     >
                         {{ index + 1 }}
                     </p>
@@ -28,7 +28,7 @@
                 </div>
             </template>
         </Draggable>
-        <button @click="$emit('new_slide')"><i class="fa-solid fa-add"></i> New Slide</button>
+        <button @click="$emit('new_slide')"><i class="fa-solid fa-add"></i> {{ language === "en" ? "New Slide" : "สไลด์ใหม่"}}</button>
     </div>
 </template>
 
@@ -82,15 +82,29 @@
         min-width: 80%;
         max-width: 80%;
         transform: rotate(0deg);
-        transition: transform 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transition: transform 2.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                    border 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                    opacity 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .slide[draggable="true"] {
+    /* .slide[draggable="true"] {
+        opacity: 0.6;
+    } */
+
+    .slide:active {
+        transform: rotate(-5deg) scale(0.6);
         opacity: 0.6;
     }
 
-    .slide.sortable-chosen {
-        transform: rotate(-10deg) scale(0.8);
+    .deleting {
+        animation: deleting 0.75s cubic-bezier(1, 0.06, 1, 0.75) forwards;
+    }
+
+    @keyframes deleting {
+        to {
+            transform: rotate(-30deg) scale(0);
+            opacity: 0;
+        }
     }
 
     .fancy {
@@ -114,9 +128,12 @@
     import Draggable from 'vuedraggable';
     import SlidePreview from '@/components/slides/SlidePreview.vue';
 
+    import type { Element, Slide } from '@/lib/types';
     import { metaState } from '@/state/is_meta_opened';
+    import { wait } from '@/lib/wait';
 
     let is_meta_opened = ref(Number(!metaState.value.is_opened));
+    watchEffect(() => console.log(is_meta_opened))
 
     let selected_index = ref(0);
     // This syntax is weird...
@@ -125,25 +142,12 @@
         (e: "select", value: number): void,
         (e: "delete_slide", id: string): void
     }>();
-
-    type Element = {
-        id: string,
-        tag: string,
-        position: {x: number, y: number, w: number, h: number},
-        styles?: {[key: string]: string | number | null},
-        attrs?: {[key: string]: string},
-        content?: string,
-    };
-
-    type Slide = {
-        id: string,
-        content: Element[]
-    };
     
     const props = defineProps({
         slides: Array as PropType<Slide[]>,
         width: String,
-        height: String
+        height: String,
+        language: String
     });
     const drag = ref(false);
 
@@ -160,14 +164,16 @@
     };
 
     const show_trash_can = (e: MouseEvent) => {
-        (<HTMLElement>e.target).innerHTML = '<i class="fa-solid fa-trash fa-sm"></i>'
+        (<HTMLElement>e.target).innerHTML = '<i class="fa-solid fa-trash fa-sm fa-shake"></i>'
     };
 
     const show_number = (e: MouseEvent, index: number) => {
         (<HTMLElement>e.target).innerHTML = index.toString();
     };
 
-    const delete_slide = (slide: Slide) => {
+    const delete_slide = async (index: number, slide: Slide) => {
+        document.getElementsByClassName(`slide${index}`)[0].classList.add('deleting');
+        await wait(750);
         emits("delete_slide", slide.id);
     };
 

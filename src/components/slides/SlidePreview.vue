@@ -6,27 +6,16 @@
 <style scoped>
     .ctx {
         color: black;
+        position: relative;
     }
 </style>
 
 <script setup lang="ts">
     import { onMounted, ref, type PropType } from 'vue';
 
-    type Element = {
-        id: string,
-        tag: string,
-        position: {x: number, y: number, w: number, h: number},
-        styles?: {[key: string]: string | number | null},
-        attrs?: {[key: string]: string},
-        content?: string,
-    };
+    import type { Element, Slide, WannabeCSSDeclaration } from '@/lib/types';
 
-    type Slide = {
-        id: string,
-        content: Element[]
-    };
-
-    type WannabeCSSDeclaration = {[key: string]: string | number | null};
+    
 
     const props = defineProps({
         data: Object as PropType<Slide>,
@@ -44,8 +33,8 @@
             let elem_dom = document.createElement(element.tag);
             elem_dom.id = element.id;
             elem_dom.style.position = "absolute";
-            elem_dom.style.top = (element.position.x / (props.width ?? 1)).toString() + "%";
-            elem_dom.style.left = (element.position.y / (props.height ?? 1)).toString() + "%";
+            elem_dom.style.top = (element.position.x / (props.width ?? 1) * 100).toString() + "%";
+            elem_dom.style.left = (element.position.y / (props.height ?? 1) * 100).toString() + "%";
             if (element.content) elem_dom.innerText = element.content;
             if (element.attrs) {
                 for (const attr in element.attrs) {

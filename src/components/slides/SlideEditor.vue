@@ -9,23 +9,24 @@
                 class="slide"
                 @drag="drag"
                 @resize="resize"
+                @rotate="rotate"
                 @content="content"
             />
         </div>
-        <div class="flex-row"> 
-            <button class="new" @click="new_elem('h1')"><i class="fa-solid fa-add"></i> h1</button>
-            <button class="new" @click="new_elem('p')"><i class="fa-solid fa-add"></i> p</button>
+        <button class="new" @click="show_add_popup = !show_add_popup">
+            <i class="fa-solid fa-add"></i>
+        </button>
+        <div :class="['popup', show_add_popup ? 'show' : 'hide' ]">
+            <h1>{{ language == "en" ? "Add..." : "เพิ่ม..." }}</h1>
+            <div class="selection">
+                <Card class="card" icon="heading" :heading="language == 'en' ? 'Heading' : 'หัวข้อ'" @click="new_elem('h1')"></Card>
+                <Card class="card" icon="paragraph" :heading="language == 'en' ? 'Paragraph' : 'ข้อความ'" @click="new_elem('p')"></Card>
+            </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-
-    .flex-row {
-        display: flex;
-        flex-flow: row nowrap;
-        gap: 20px;
-    }
     .container {
         flex-grow: 1;
         display: flex;
@@ -46,40 +47,75 @@
     }
 
     .new {
+        position: fixed;
+        right: 5%;
+        bottom: 5%;
         width: fit-content;
         border-radius: 100%;
         min-width: 3rem;
         min-height: 3rem;
         margin-left: auto;
+        aspect-ratio: 1 / 1;
+    }
+    .popup {
+        position: fixed;
+        right: 10%;
+        bottom: 5%;
+        width: fit-content;
+        min-width: 3rem;
+        min-height: 3rem;
+        margin-left: auto;
+        background: #222;
+        border-radius: 10px;
+        border-bottom-right-radius: 0;
+        padding: 20px;
+        margin: 1px;
+        transform-origin: 100% 100%;
+        transition: transform 250ms cubic-bezier(0.34, 1.35, 0.54, 1.4),
+                    opacity 250ms cubic-bezier(0.34, 1.35, 0.54, 1.4);
+    }
+
+    .popup.hide {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    .popup.show {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    .card {
+        max-width: 20vw;
+        max-height: 5vh;
+        border-radius: 10px;
+        padding: 20px;
+        transition: transform 250ms cubic-bezier(0.34, 1.35, 0.54, 1.4);
+    }
+
+    .card:hover {
+        transform: scale(1.2);
     }
 </style>
 
 <script lang="ts" setup>
     import { watchEffect, ref, type PropType } from 'vue';
+    import type { Slide } from '@/lib/types';
+    import Card from '../Card.vue';
 
     import InnerEditor from '@/components/slides/InnerEditor.vue';
-    type Element = {
-        id: string,
-        tag: string,
-        position: {x: number, y: number, w: number, h: number},
-        styles?: {[key: string]: string | number | null},
-        attrs?: {[key: string]: string},
-        content?: string,
-    };
-    type Slide = {
-        id: string,
-        content: Element[]
-    };
 
     const props = defineProps({
         slide: Object as PropType<Slide>,
         width: String,
-        height: String
+        height: String,
+        language: String
     });
 
     const emit = defineEmits<{
         (e: "drag", x: number, y: number, id: string): void,
         (e: "resize", x: number, y: number, w: number, h: number, id: string): void,
+        (e: "rotate", r: number, id: string): void,
         (e: "content", content: string, caret_pos: number, id: string): void,
         (e: "new_elem", tag: string, id: string): void
     }>();
@@ -87,9 +123,11 @@
     const new_elem = (tag: string) => {
         if (!props.slide) return "cope";
         emit("new_elem", tag, props.slide.id);
+        show_add_popup.value = false;
     };
 
     let num_width = ref(0), num_height = ref(0);
+    const show_add_popup = ref(false);
 
     watchEffect(() => {
         num_width .value = Number((/\d+/g.exec(props.width  ?? "1920px") ?? [0])[0]);
@@ -103,6 +141,10 @@
     const resize = (x: number, y: number, w: number, h: number, id: string) => {
         emit("resize", x, y, w, h, id);
     };
+
+    const rotate = (r: number, id: string) => {
+        emit("rotate", r, id);
+    }
 
     const content = (content: string, caret_pos: number, id: string) => {
         emit("content", content, caret_pos, id);
