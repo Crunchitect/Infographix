@@ -40,7 +40,7 @@
   import type { LangTable } from '@/lib/types';
 
   const viewWidth = ref(window.innerWidth);
-  const lang = ref("en");
+  const lang = ref("th");
   const langs = ref(["th", "en"]);
   const change_lang = ref(change_lang_gen());
   const lang_store = reactive(<LangTable>{
