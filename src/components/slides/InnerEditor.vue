@@ -115,7 +115,7 @@
 
     const edit_content = (e: InputEvent) => {
         const target = <HTMLElement>e.target;
-        emit("content", target.innerText, getCaretPosition(), target.id);
+        emit("content", target.innerHTML, getCaretPosition(), target.id);
     };
 
     const fill = () => {
