@@ -18,4 +18,6 @@ type Slide = {
     content: Element[]
 };
 
-export type { LangTable, NoViewWidth, Element, Slide, AnytoAny, WannabeCSSDeclaration };
+type VueElRef = null | HTMLElement;
+
+export type { LangTable, NoViewWidth, Element, Slide, AnytoAny, WannabeCSSDeclaration, VueElRef };

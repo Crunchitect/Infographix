@@ -13,7 +13,7 @@
 <script setup lang="ts">
     import { onMounted, ref, type PropType } from 'vue';
 
-    import type { Element, Slide, WannabeCSSDeclaration } from '@/lib/types';
+    import type { VueElRef, Slide, WannabeCSSDeclaration } from '@/lib/types';
 
     
 
@@ -25,13 +25,13 @@
     });
 
     const content = props.data?.content ?? [];
-    const ctx = ref(null as null | HTMLElement);
+    const ctx = ref(null as VueElRef);
     
     onMounted(() => {
         // console.log(content);
         for (const element of content) {
             let elem_dom = document.createElement(element.tag);
-            elem_dom.id = element.id;
+            elem_dom.id = element.id + "-preview";
             elem_dom.style.position = "absolute";
             elem_dom.style.top = (element.position.x / (props.width ?? 1) * 100).toString() + "%";
             elem_dom.style.left = (element.position.y / (props.height ?? 1) * 100).toString() + "%";

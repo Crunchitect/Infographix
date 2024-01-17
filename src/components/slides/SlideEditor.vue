@@ -10,6 +10,7 @@
                 @drag="drag"
                 @resize="resize"
                 @rotate="rotate"
+                @keydown.delete="delete_el"
                 @content="content"
             />
         </div>
@@ -19,7 +20,8 @@
         <div :class="['popup', show_add_popup ? 'show' : 'hide' ]">
             <h1>{{ language == "en" ? "Add..." : "เพิ่ม..." }}</h1>
             <div class="selection">
-                <Card class="card" icon="heading" :heading="language == 'en' ? 'Heading' : 'หัวข้อ'" @click="new_elem('h1')"></Card>
+                <Card class="card" icon="heading" :heading="language == 'en' ? 'Header' : 'หัวข้อ'" @click="new_elem('h1')"></Card>
+                <Card class="card fa-sm" icon="heading" :heading="language == 'en' ? 'Subheader' : 'หัวข้อย่อย'" @click="new_elem('h2')"></Card>
                 <Card class="card" icon="paragraph" :heading="language == 'en' ? 'Paragraph' : 'ข้อความ'" @click="new_elem('p')"></Card>
             </div>
         </div>
@@ -117,7 +119,8 @@
         (e: "resize", x: number, y: number, w: number, h: number, id: string): void,
         (e: "rotate", r: number, id: string): void,
         (e: "content", content: string, caret_pos: number, id: string): void,
-        (e: "new_elem", tag: string, id: string): void
+        (e: "new_elem", tag: string, id: string): void,
+        (e: "delete", id: string): void
     }>();
 
     const new_elem = (tag: string) => {
@@ -148,6 +151,10 @@
 
     const content = (content: string, caret_pos: number, id: string) => {
         emit("content", content, caret_pos, id);
+    };
+
+    const delete_el = (id: string) => {
+        emit("delete", id);
     };
 
 </script>

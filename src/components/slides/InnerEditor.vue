@@ -1,8 +1,9 @@
 <!-- 
-    The $refs thing is only i know... but it gets the job done quite amazingly, actually.
+    The $refs thing is messy i know... but it gets the job done quite amazingly, actually.
     https://stackoverflow.com/questions/55379483/can-you-pass-an-element-to-a-function-within-the-template-in-vue
 -->
 <template v-if="$refs">
+    <TextFormat :update="text_edit_show" />
     <div ref="ctx" class="ctx">
         <BoxModal
             v-for="(element, index) in data?.content"
@@ -24,6 +25,7 @@
             v-model:w="element.position.w"
             v-model:h="element.position.h"
             v-model:r="element.position.r"
+            @keydown.delete="delete_elem"
         >
             <component 
                 :ref="`draggable${index}`"
@@ -32,13 +34,13 @@
                 :style="{
                     ...element.styles,
                     color: 'black',
-                    // 'font-size': `${element.position.h / 3}px`,
                     'text-align': 'center'
                 }"
                 v-bind="element.attrs"
                 contenteditable
                 class="no-focus"
-                @blur="edit_content"
+                @focus="text_edit_show = {tag: element.tag, id: element.id}"
+                @blur="(e: InputEvent) => {edit_content(e); text_edit_show = {}}"
             >
                 {{ element.content }}
             </component>
@@ -68,14 +70,18 @@
 </style>
 
 <script lang="ts" setup>
-    import type { PropType } from 'vue';
+    import { type PropType, ref } from 'vue';
     import { getCaretPosition } from '@/lib/caret_position';
 
     // @ts-ignore
     import BoxModal from '@gausszhou/vue3-drag-resize-rotate';
     import "@gausszhou/vue3-drag-resize-rotate/lib/bundle.esm.css";
 
+    import TextFormat from '@/components/TextFormat.vue';
+
     import type { Slide } from '@/lib/types';
+
+    const text_edit_show = ref(<{tag?: string, id?: string}>{});
 
     const props = defineProps({
         data: Object as PropType<Slide>,
@@ -89,7 +95,8 @@
         (e: "drag", x: number, y: number, id: string): void,
         (e: "resize", x: number, y: number, w: number, h: number, id: string): void,
         (e: "content", content: string, caret_pos: number, id: string): void,
-        (e: "rotate", r: number, id: string): void
+        (e: "rotate", r: number, id: string): void,
+        (e: "delete", id: string): void
     }>();
 
     const edit_pos = (left: number, top: number, ref: HTMLElement[]) => {
@@ -109,11 +116,15 @@
     const edit_content = (e: InputEvent) => {
         const target = <HTMLElement>e.target;
         emit("content", target.innerText, getCaretPosition(), target.id);
-    }
+    };
 
     const fill = () => {
         Array.from(document.getElementsByClassName('handle-rot')).forEach(element => {
             (<HTMLElement>element).style.display = "block";
         });
-    }
+    };
+
+    const delete_elem = (e: KeyboardEvent) => {
+        emit("delete", (<HTMLElement>e.target).id);
+    };
 </script>

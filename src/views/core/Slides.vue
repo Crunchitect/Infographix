@@ -26,6 +26,7 @@
                 @resize="resize"
                 @rotate="rotate"
                 @content="content"
+                @delete="delete_el"
                 @new_elem="new_elem"
             />
         </div>
@@ -186,6 +187,15 @@
                     },
                     content: "Insert text here...."
                 }] : slide.content
+            };
+        });
+    };
+
+    const delete_el = (id: string) => {
+        slides.value = slides.value.map(slide => {
+            return {
+                id: slide.id,
+                content: slide.content.filter(el => el.id !== id)
             };
         });
     };
