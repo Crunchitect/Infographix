@@ -37,12 +37,12 @@
                     'text-align': 'center'
                 }"
                 v-bind="element.attrs"
+                v-html="element.content"
                 contenteditable
                 class="no-focus"
                 @focus="text_edit_show = {tag: element.tag, id: element.id}"
                 @blur="(e: InputEvent) => {edit_content(e); text_edit_show = {}}"
             >
-                {{ element.content }}
             </component>
         </BoxModal>
     </div>
