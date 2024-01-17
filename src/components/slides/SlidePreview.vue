@@ -33,9 +33,11 @@
             let elem_dom = document.createElement(element.tag);
             elem_dom.id = element.id + "-preview";
             elem_dom.style.position = "absolute";
-            elem_dom.style.top = (element.position.x / (props.width ?? 1) * 100).toString() + "%";
-            elem_dom.style.left = (element.position.y / (props.height ?? 1) * 100).toString() + "%";
-            if (element.content) elem_dom.innerText = element.content;
+            elem_dom.style.top = (element.position.x / (props.width ?? 1) * 50).toString() + "%";
+            elem_dom.style.left = (element.position.y / (props.height ?? 1) * 50).toString() + "%";
+            elem_dom.style.transform = `rotate(${element.position.r}deg)`;
+            elem_dom.style.scale = `0.5`;
+            if (element.content) elem_dom.innerHTML = element.content;
             if (element.attrs) {
                 for (const attr in element.attrs) {
                     elem_dom.setAttribute(attr, element.attrs[attr]);
