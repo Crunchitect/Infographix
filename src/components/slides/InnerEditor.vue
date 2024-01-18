@@ -7,6 +7,7 @@
     <div ref="ctx" class="ctx">
         <BoxModal
             v-for="(element, index) in data?.content"
+            @keydown.delete="delete_elem"
             @dragstop="
                 (x: number, y: number) => 
                     edit_pos(x, y, (<HTMLElement[]>$refs[`draggable${index}`]))
@@ -41,7 +42,6 @@
                 class="no-focus"
                 @focus="text_edit_show = {tag: element.tag, id: element.id}"
                 @blur="(e: InputEvent) => {edit_content(e); text_edit_show = {}}"
-                @keydown.delete="delete_elem"
             >
             </component>
         </BoxModal>

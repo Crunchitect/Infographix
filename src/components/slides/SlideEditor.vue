@@ -10,7 +10,7 @@
                 @drag="drag"
                 @resize="resize"
                 @rotate="rotate"
-                @keydown.delete="delete_el"
+                @delete="delete_el"
                 @content="content"
             />
         </div>
