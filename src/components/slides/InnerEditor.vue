@@ -25,7 +25,6 @@
             v-model:w="element.position.w"
             v-model:h="element.position.h"
             v-model:r="element.position.r"
-            @keydown.delete="delete_elem"
         >
             <component 
                 :ref="`draggable${index}`"
@@ -42,6 +41,7 @@
                 class="no-focus"
                 @focus="text_edit_show = {tag: element.tag, id: element.id}"
                 @blur="(e: InputEvent) => {edit_content(e); text_edit_show = {}}"
+                @keydown.delete="delete_elem"
             >
             </component>
         </BoxModal>

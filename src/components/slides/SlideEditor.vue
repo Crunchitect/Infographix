@@ -21,7 +21,7 @@
             <h1>{{ language == "en" ? "Add..." : "เพิ่ม..." }}</h1>
             <div class="selection">
                 <Card class="card" icon="heading" :heading="language == 'en' ? 'Header' : 'หัวข้อ'" @click="new_elem('h1')"></Card>
-                <Card class="card fa-sm" icon="heading" :heading="language == 'en' ? 'Subheader' : 'หัวข้อย่อย'" @click="new_elem('h2')"></Card>
+                <Card class="card" icon="heading" :heading="language == 'en' ? 'Subheader' : 'หัวข้อย่อย'" @click="new_elem('h2')"></Card>
                 <Card class="card" icon="paragraph" :heading="language == 'en' ? 'Paragraph' : 'ข้อความ'" @click="new_elem('p')"></Card>
             </div>
         </div>
