@@ -9,7 +9,13 @@
                     <CloudSaved />
                 </span>
             </span></h1>
-            <p><strong>{{ language == 'en' ? "Size" : "ขนาด" }}:</strong> 
+            <p style="word-wrap: none;">
+                <span class="share">
+                    <input type="text" placeholder="Share to..." v-model="shared_address"> &nbsp;&nbsp;
+                    <i class="fa-solid fa-paper-plane fa-sm" @click="invite"></i>
+                </span>
+                <!-- &nbsp;&nbsp;&nbsp; -->
+                <strong>{{ language == 'en' ? "Size" : "ขนาด" }}:</strong> 
                 {{ width }} x {{ height }}
             </p>
         </div>
@@ -20,6 +26,8 @@
 <script lang="ts" setup>
     import { computed, ref } from 'vue';
     import { metaState } from '@/state/is_meta_opened';
+    import { supabase } from '@/lib/supabase';
+    import { wait } from '@/lib/wait';
 
     import CloudSaving from '@/components/icons/CloudSaving.vue';
     import CloudSaved from '@/components/icons/CloudSaved.vue';
@@ -29,15 +37,42 @@
         width: String,
         height: String,
         language: String,
-        cloud_status: Number
+        cloud_status: Number,
+        team_id: Number
     });
 
     const opened = ref(true);
+
+    const shared_address = ref("");
 
     const toggle = () => {
         opened.value = !opened.value;
         metaState.value.set_is_opened(opened.value);
     };
+
+    const invite = async (e: MouseEvent) => {
+        console.log(props.team_id)
+        const team_members = await supabase
+            .from("Teams")
+            .select("team_members")
+            .eq("id", props.team_id);
+        const old_team = team_members.data![0].team_members;
+        console.log([...old_team, {email: shared_address.value, status: "edit"}])
+        await supabase
+            .from("Teams")
+            .update({
+                team_members: [...old_team, {email: shared_address.value, status: "edit"}]
+            })
+            .eq("id", props.team_id)
+            .select();
+        (<HTMLElement>e.target).classList.remove('fa-paper-plane');
+        (<HTMLElement>e.target).classList.add('fa-check');
+        (<HTMLElement>e.target).classList.add('fa-beat');
+        await wait(200);
+        (<HTMLElement>e.target).classList.add('fa-paper-plane');
+        (<HTMLElement>e.target).classList.remove('fa-check');
+        (<HTMLElement>e.target).classList.remove('fa-beat');
+    }
 
    const status = computed(() => props.cloud_status);
 </script>
@@ -98,5 +133,18 @@
 
     .content > * {
         margin: 0;
+    }
+
+    .share input {
+        font-size: 1em;
+        border-radius: 10px;
+        height: 2.5vh;
+        margin: 0;
+    }
+
+    .share i {
+        padding: 10px;
+        padding-left: 0;
+        padding-right: 30px;
     }
 </style>

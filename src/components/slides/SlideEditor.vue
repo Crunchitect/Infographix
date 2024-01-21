@@ -5,13 +5,13 @@
                 :data="slide" 
                 :width="num_width" 
                 :height="num_height"
-                :log="'l'"
                 class="slide"
                 @drag="drag"
                 @resize="resize"
                 @rotate="rotate"
                 @delete="delete_el"
                 @content="content"
+                @styles="$emit('styles')"
             />
         </div>
         <button class="new" @click="show_add_popup = !show_add_popup">
@@ -19,10 +19,15 @@
         </button>
         <div :class="['popup', show_add_popup ? 'show' : 'hide' ]">
             <h1>{{ language == "en" ? "Add..." : "เพิ่ม..." }}</h1>
+            <h2>{{ language == "en" ? "Text" : "ข้อความ" }}</h2>
             <div class="selection">
                 <Card class="card" icon="heading" :heading="language == 'en' ? 'Header' : 'หัวข้อ'" @click="new_elem('h1')"></Card>
                 <Card class="card" icon="heading" :heading="language == 'en' ? 'Subheader' : 'หัวข้อย่อย'" @click="new_elem('h2')"></Card>
                 <Card class="card" icon="paragraph" :heading="language == 'en' ? 'Paragraph' : 'ข้อความ'" @click="new_elem('p')"></Card>
+            </div>
+            <h2>{{ language == "en" ? "Shapes" : "รูปทรง" }}</h2>
+            <div class="selection">
+                <Card class="card" icon="square" :heading="language == 'en' ? 'Rectangle' : 'สี่เหลี่ยม'" @click="new_elem('div')"></Card>
             </div>
         </div>
     </div>
@@ -66,6 +71,8 @@
         width: fit-content;
         min-width: 3rem;
         min-height: 3rem;
+        max-height: 50vh;
+        overflow: auto;
         margin-left: auto;
         background: #222;
         border-radius: 10px;
@@ -120,7 +127,8 @@
         (e: "rotate", r: number, id: string): void,
         (e: "content", content: string, caret_pos: number, id: string): void,
         (e: "new_elem", tag: string, id: string): void,
-        (e: "delete", id: string): void
+        (e: "delete", id: string): void,
+        (e: "styles"): void
     }>();
 
     const new_elem = (tag: string) => {

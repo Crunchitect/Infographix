@@ -27,9 +27,9 @@ const router = createRouter({
       redirect: '/projects'
     },
     {
-      path: '/:catchAll(.*)',
-      name: 'NotFound',
-      component: () => import('../views/NotFound.vue')
+      path: '/slide/404',
+      name: 'SlideNotFound',
+      component: () => import('../views/core/NoSlide.vue')
     },
     {
       path: '/slide/:id',
@@ -40,6 +40,11 @@ const router = createRouter({
       path: '/about',
       name: 'About',
       component: () => import('../views/About.vue')
+    },
+    {
+      path: '/:catchAll(.*)',
+      name: 'NotFound',
+      component: () => import('../views/NotFound.vue')
     }
   ]
 })

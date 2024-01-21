@@ -18,6 +18,7 @@
     "supabase": "^1.115.5",
     "vite": "^5.0.10",
     "vue": "^3.3.4",
+    "vue-color-kit": "^1.0.6",
     "vue-router": "^4.2.5",
     "vuedraggable": "^4.1.0"
   },

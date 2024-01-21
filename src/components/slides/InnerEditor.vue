@@ -3,11 +3,11 @@
     https://stackoverflow.com/questions/55379483/can-you-pass-an-element-to-a-function-within-the-template-in-vue
 -->
 <template v-if="$refs">
-    <TextFormat :update="text_edit_show" />
+    <TextFormat :update="text_edit_show" @delete="(id: string) => $emit('delete', id)" @styles="$emit('styles')"/>
     <div ref="ctx" class="ctx">
         <BoxModal
             v-for="(element, index) in data?.content"
-            @keydown.delete="delete_elem"
+            @keydown="delete_elem"
             @dragstop="
                 (x: number, y: number) => 
                     edit_pos(x, y, (<HTMLElement[]>$refs[`draggable${index}`]))
@@ -39,7 +39,7 @@
                 v-bind="element.attrs"
                 v-html="element.content"
                 contenteditable
-                class="no-focus"
+                class="no-focus full"
                 @focus="text_edit_show = {tag: element.tag, id: element.id}"
                 @blur="(e: InputEvent) => {edit_content(e); text_edit_show = {}}"
             >
@@ -66,6 +66,11 @@
 
     [contenteditable] {
         outline: 0px solid transparent;
+    }
+    
+    div.full {
+        width: 100%;
+        height: 100%;
     }
 </style>
 
@@ -96,7 +101,8 @@
         (e: "resize", x: number, y: number, w: number, h: number, id: string): void,
         (e: "content", content: string, caret_pos: number, id: string): void,
         (e: "rotate", r: number, id: string): void,
-        (e: "delete", id: string): void
+        (e: "delete", id: string): void,
+        (e: "styles"): void
     }>();
 
     const edit_pos = (left: number, top: number, ref: HTMLElement[]) => {
@@ -125,6 +131,6 @@
     };
 
     const delete_elem = (e: KeyboardEvent) => {
-        emit("delete", (<HTMLElement>e.target).id);
+        if (e.code === "Delete") emit("delete", (<HTMLElement>e.target).id);
     };
 </script>

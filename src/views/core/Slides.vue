@@ -6,6 +6,7 @@
             :height="height"
             :language="language"
             :cloud_status="cloud_status"
+            :team_id="team_id"
         />
         <div class="bottom">
             <SlideView
@@ -28,6 +29,7 @@
                 @content="content"
                 @delete="delete_el"
                 @new_elem="new_elem"
+                @styles="styles"
             />
         </div>
     </div>
@@ -60,6 +62,7 @@
     import SlideEditor from '@/components/slides/SlideEditor.vue';
 
     import type { Slide, Element, AnytoAny } from '@/lib/types';
+    import { is_text_elem } from '@/lib/detect_tag';
 
     const props = defineProps({
         language: String
@@ -75,6 +78,9 @@
     const metadata = ref(<AnytoAny>{});
     const loading_done = ref(false);
     const cloud_status = ref(0);
+    const team_id = ref(0);
+
+    const is_not_me = ref(false);
 
     let selected_slide_index = ref(0);
 
@@ -90,13 +96,14 @@
         if (!proj_data) return;
         const data = proj_data[0];
 
-
+        if (!data) router.push('/slide/404');
         name.value = data.name;
         width.value = data.content.metadata.width;
         height.value = data.content.metadata.height;
         metadata.value = data.content.metadata;
 
         slides.value = data.content.data;
+        team_id.value = data.team_id;
 
         loading_done.value = true;
     });
@@ -185,8 +192,21 @@
                     position: {
                         x: 69, y: 420, w: 420, h: 69
                     },
-                    content: "Insert text here...."
+                    content: is_text_elem(tag) ? "Insert text here...." : ''
                 }] : slide.content
+            };
+        });
+    };
+    
+    const styles = () => {
+        slides.value = slides.value.map(slide => {
+            return {
+                id: slide.id,
+                content: slide.content.map(element => {
+                    let styles = <{[k: string]: any}>(document.getElementById(element.id)?.style) ?? {};
+                    styles = Object.fromEntries(Object.entries(<object>styles).filter(([key, value]) => value !== "" && isNaN(parseInt(key))));
+                    return {...element, styles: styles};
+                })
             };
         });
     };
@@ -202,8 +222,12 @@
 
     watch(slides, async () => {
         cloud_status.value = 0;
-        // console.log("updated server");
         if (!loading_done.value) return "cope";
+        if (is_not_me.value) {
+            is_not_me.value = false;
+            return;
+        }
+        console.log("updated server");
         const slug = {
             name: name.value,
             type: "slide",
@@ -221,5 +245,24 @@
             .select();
         cloud_status.value = 1;
     });
+
+    const collab_channel = supabase
+        .channel('table_db_changes')
+        .on(
+            'postgres_changes',
+            {
+                event: '*',
+                schema: 'public',
+                table: 'Projects',
+                filter: `id=eq.${route.params.id}`
+            },
+            (payload) => {
+                is_not_me.value = true;
+                slides.value = (<AnytoAny>payload.new).content.data;
+                metadata.value = (<AnytoAny>payload.new).content.metadata;
+                // console.log(payload);
+            }
+        )
+        .subscribe();
 
 </script>

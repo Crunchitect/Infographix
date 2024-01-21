@@ -109,9 +109,9 @@
         show_modal();
 
         const team_string = [{
-                        uid: user.value.id,
+                        email: user.value.email,
                         status: "owner"
-                    }];
+        }];
         const { data: team_data, error: team_error } = await supabase
             .from("Teams")
             .insert([
@@ -125,6 +125,7 @@
             return team_error;
         }
         const team_id = team_data[0].id;
+        const team_id_ref = ref(team_data[0].id);
         const { data: proj_data, error: proj_error } = await supabase
                 .from("Projects")
                 .insert([

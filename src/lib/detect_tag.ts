@@ -26,7 +26,12 @@ const is_text_elem = (tag: string) => {
         is_inline_text_elem(tag);
 };
 
+const is_generic_elem = (tag: string) => {
+    return tag === 'div' || tag === 'span';
+};
+
 export {
     is_text_elem,
-    is_block_text_elem, is_inline_text_elem
-}
+    is_block_text_elem, is_inline_text_elem,
+    is_generic_elem
+};

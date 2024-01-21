@@ -133,7 +133,6 @@
     import { wait } from '@/lib/wait';
 
     let is_meta_opened = ref(Number(!metaState.value.is_opened));
-    watchEffect(() => console.log(is_meta_opened))
 
     let selected_index = ref(0);
     // This syntax is weird...

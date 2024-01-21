@@ -71,6 +71,7 @@
         border: none;
         opacity: 0.8;
         font-weight: normal;
+        transform: none !important;
         transition: background-position 500ms, color 500ms, opacity 500ms, font-weight 500ms;
         transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
     }

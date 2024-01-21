@@ -16,6 +16,6 @@ const serializer = new XMLSerializer();
 // Selection API: https://developer.mozilla.org/en-US/docs/Web/API/Selection
 // Non-null assertion operator https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#non-null-assertion-operator-postfix-
 
-const wrap_html = (opening: string, closing: string) => document.execCommand("insertHTML", false, opening + serializer.serializeToString(get_selected_html()!).replace(/xmlns="\w*"/g, '') + closing);
+const wrap_html = (opening: string, closing: string) => document.execCommand("insertHTML", false, opening + serializer.serializeToString(get_selected_html()!).replace(/xmlns="[\w\/\.:]*?"/g, '') + closing);
 
 export { wrap_html, get_selected_html, serializer };
