@@ -258,6 +258,7 @@
             },
             (payload) => {
                 is_not_me.value = true;
+                console.log('!')
                 slides.value = (<AnytoAny>payload.new).content.data;
                 metadata.value = (<AnytoAny>payload.new).content.metadata;
                 console.log(payload);
