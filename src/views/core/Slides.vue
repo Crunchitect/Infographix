@@ -260,7 +260,7 @@
                 is_not_me.value = true;
                 slides.value = (<AnytoAny>payload.new).content.data;
                 metadata.value = (<AnytoAny>payload.new).content.metadata;
-                // console.log(payload);
+                console.log(payload);
             }
         )
         .subscribe();
