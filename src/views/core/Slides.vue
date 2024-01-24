@@ -1,36 +1,38 @@
 <template>
-    <div class="main">
-        <Metadata
-            :name="name"
-            :width="width"
-            :height="height"
-            :language="language"
-            :cloud_status="cloud_status"
-            :team_id="team_id"
-        />
-        <div class="bottom">
-            <SlideView
-                :slides="slides"
+    <div @keydown.ctrl="hotkeys" tabindex="0">
+        <div class="main">
+            <Metadata
+                :name="name"
                 :width="width"
                 :height="height"
-                @new_slide="new_slide"
-                @select="select_slide"
-                @delete_slide="delete_slide"
                 :language="language"
+                :cloud_status="cloud_status"
+                :team_id="team_id"
             />
-            <SlideEditor
-                :slide="slides[selected_slide_index]"
-                :width="width" 
-                :height="height"
-                :language="language"
-                @drag="drag"
-                @resize="resize"
-                @rotate="rotate"
-                @content="content"
-                @delete="delete_el"
-                @new_elem="new_elem"
-                @styles="styles"
-            />
+            <div class="bottom">
+                <SlideView
+                    :slides="slides"
+                    :width="width"
+                    :height="height"
+                    @new_slide="new_slide"
+                    @select="select_slide"
+                    @delete_slide="delete_slide"
+                    :language="language"
+                />
+                <SlideEditor
+                    :slide="slides[selected_slide_index]"
+                    :width="width"
+                    :height="height"
+                    :language="language"
+                    @drag="drag"
+                    @resize="resize"
+                    @rotate="rotate"
+                    @content="content"
+                    @delete="delete_el"
+                    @new_elem="new_elem"
+                    @styles="styles"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -184,7 +186,7 @@
         });
     };
 
-    const new_elem = (tag: string, id: string) => {
+    const new_elem = (tag: string, id: string, content?: string) => {
         slides.value = slides.value.map(slide => {
             return {
                 id: slide.id,
@@ -194,7 +196,7 @@
                     position: {
                         x: 69, y: 420, w: 420, h: 69
                     },
-                    content: is_text_elem(tag) ? "Insert text here...." : ''
+                    content: is_text_elem(tag) ? content : ''
                 }] : slide.content
             };
         });
@@ -223,6 +225,40 @@
         });
     };
 
+    const paste_from_clipboard = async () => {
+        try {
+            const clipboardContents = await navigator.clipboard.read();
+            const item = clipboardContents.at(-1);
+            for (const mimeType of item!.types) {
+                console.log(mimeType);
+                const blob = await item!.getType(mimeType);
+                console.log(blob)
+                const selected_slide = slides.value[selected_slide_index.value].id;
+                switch (mimeType) {
+                    case "text/html":
+                    case "text/plain":
+                        const text = await blob.text();
+                        new_elem("h1", selected_slide, text);
+                        break;
+                    case "image/png":
+                        
+                }
+            }
+        } catch (error) {
+            console.error((<{"message": string}>error).message);
+        }
+    }
+
+    const hotkeys = (key: KeyboardEvent) => {
+        if (key.key == 'Control') return;
+        switch (key.key) {
+            case 'n':
+                new_slide(); break;
+            case 'v':
+                paste_from_clipboard();
+        }
+    }
+
     watch(slides, async () => {
         cloud_status.value = 0;
         if (!loading_done.value) return "cope";
@@ -230,7 +266,7 @@
             is_not_me.value = false;
             return;
         }
-        console.log("updated server");
+        // console.log("updated server");
         const slug = {
             name: name.value,
             type: "slide",
@@ -261,10 +297,9 @@
             },
             (payload) => {
                 is_not_me.value = true;
-                console.log('!')
                 slides.value = (<AnytoAny>payload.new).content.data;
                 metadata.value = (<AnytoAny>payload.new).content.metadata;
-                console.log(payload);
+                // console.log(payload);
             }
         )
         .subscribe();
