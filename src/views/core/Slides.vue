@@ -63,6 +63,8 @@
 
     import type { Slide, Element, AnytoAny } from '@/lib/types';
     import { is_text_elem } from '@/lib/detect_tag';
+    import { kebabize } from '@/lib/casing';
+    import { obj_filter, obj_map, obj_rename_key } from '@/lib/obj_utils';
 
     const props = defineProps({
         language: String
@@ -204,7 +206,8 @@
                 id: slide.id,
                 content: slide.content.map(element => {
                     let styles = <{[k: string]: any}>(document.getElementById(element.id)?.style) ?? {};
-                    styles = Object.fromEntries(Object.entries(<object>styles).filter(([key, value]) => value !== "" && isNaN(parseInt(key))));
+                    styles = obj_filter(styles, ([key, value]) => value !== "" && isNaN(parseInt(key)));
+                    obj_map(styles, key => obj_rename_key(styles, key, kebabize(<string>key)));
                     return {...element, styles: styles};
                 })
             };
