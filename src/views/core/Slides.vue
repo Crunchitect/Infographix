@@ -63,10 +63,11 @@
     import SlideView from "@/components/slides/SlideView.vue";
     import SlideEditor from '@/components/slides/SlideEditor.vue';
 
-    import type { Slide, Element, AnytoAny } from '@/lib/types';
+    import type { Slide, Element, AnytoAny, WannabeCSSDeclaration } from '@/lib/types';
     import { is_text_elem } from '@/lib/detect_tag';
     import { kebabize } from '@/lib/casing';
     import { obj_filter, obj_map, obj_rename_key } from '@/lib/obj_utils';
+    import { blob_to_base64 } from '@/lib/file_utils';
 
     const props = defineProps({
         language: String
@@ -186,7 +187,7 @@
         });
     };
 
-    const new_elem = (tag: string, id: string, content?: string) => {
+    const new_elem = (tag: string, id: string, content?: string, attrs?: WannabeCSSDeclaration) => {
         slides.value = slides.value.map(slide => {
             return {
                 id: slide.id,
@@ -196,7 +197,8 @@
                     position: {
                         x: 69, y: 420, w: 420, h: 69
                     },
-                    content: is_text_elem(tag) ? content : ''
+                    content: is_text_elem(tag) ? (content ?? 'Insert text here...') : '',
+                    attrs: attrs
                 }] : slide.content
             };
         });
@@ -229,20 +231,21 @@
         try {
             const clipboardContents = await navigator.clipboard.read();
             const item = clipboardContents.at(-1);
-            for (const mimeType of item!.types) {
-                console.log(mimeType);
-                const blob = await item!.getType(mimeType);
-                console.log(blob)
-                const selected_slide = slides.value[selected_slide_index.value].id;
-                switch (mimeType) {
-                    case "text/html":
-                    case "text/plain":
-                        const text = await blob.text();
-                        new_elem("h1", selected_slide, text);
-                        break;
-                    case "image/png":
-                        
-                }
+            const mimeType = item!.types.at(-1);
+            console.log(mimeType);
+            const blob = await item!.getType(mimeType!);
+            console.log(blob)
+            const selected_slide = slides.value[selected_slide_index.value].id;
+            switch (mimeType) {
+                case "text/html":
+                case "text/plain":
+                    const text = await blob.text();
+                    new_elem("h1", selected_slide, text);
+                    break;
+                case "image/png":
+                    const source = <string>(await blob_to_base64(blob));
+                    new_elem("img", selected_slide, "", {src: source});
+                    debugger;
             }
         } catch (error) {
             console.error((<{"message": string}>error).message);
