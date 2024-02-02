@@ -14,6 +14,9 @@
                 @styles="$emit('styles')"
             />
         </div>
+        <button class="ai" @click="show_ai_popup = !show_ai_popup">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </button>
         <button class="new" @click="show_add_popup = !show_add_popup">
             <i class="fa-solid fa-add"></i>
         </button>
@@ -29,6 +32,12 @@
             <div class="selection">
                 <Card class="card" icon="square" :heading="language == 'en' ? 'Rectangle' : 'สี่เหลี่ยม'" @click="new_elem('div')"></Card>
             </div>
+        </div>
+        <div :class="['popup ai-popup', show_ai_popup ? 'show' : 'hide' ]">
+            <h1>{{ language == "en" ? "AI Prompt" : "คุณต้องการเพิ่มอะไรหรอ?" }}</h1>
+            <textarea v-model="prompt" :placeholder="language == 'en' ? 'Enter your dreams....' : 'เขียนบอกให้ AI ทำให้เลย!' "></textarea>
+            <br>
+            <button @click="generate_slide_layout(prompt)">{{ language == "en" ? "Add" : "เพิ่มเลย!" }}</button>
         </div>
     </div>
 </template>
@@ -53,7 +62,7 @@
         min-width: 80%;
     }
 
-    .new {
+    .new, .ai {
         position: fixed;
         right: 5%;
         bottom: 5%;
@@ -64,6 +73,11 @@
         margin-left: auto;
         aspect-ratio: 1 / 1;
     }
+
+    .ai {
+        right: 10% !important; 
+    }
+
     .popup {
         position: fixed;
         right: 10%;
@@ -82,6 +96,10 @@
         transform-origin: 100% 100%;
         transition: transform 250ms cubic-bezier(0.34, 1.35, 0.54, 1.4),
                     opacity 250ms cubic-bezier(0.34, 1.35, 0.54, 1.4);
+    }
+
+    .ai-popup {
+        right: 15% !important;
     }
 
     .popup.hide {
@@ -105,6 +123,15 @@
     .card:hover {
         transform: scale(1.2);
     }
+
+    textarea {
+        color: white;
+        background-color: #0c0c0c;
+        width: 100%;
+        height: 15vh;
+        border-radius: 10px;
+        font-size: 1.5rem;
+    }
 </style>
 
 <script lang="ts" setup>
@@ -113,6 +140,7 @@
     import Card from '../Card.vue';
 
     import InnerEditor from '@/components/slides/InnerEditor.vue';
+    import { generate_slide_layout } from '@/lib/llm';
 
     const props = defineProps({
         slide: Object as PropType<Slide>,
@@ -139,6 +167,8 @@
 
     let num_width = ref(0), num_height = ref(0);
     const show_add_popup = ref(false);
+    const show_ai_popup = ref(false);
+    const prompt = ref("");
 
     watchEffect(() => {
         num_width .value = Number((/\d+/g.exec(props.width  ?? "1920px") ?? [0])[0]);
