@@ -37,7 +37,7 @@
             <h1>{{ language == "en" ? "AI Prompt" : "คุณต้องการเพิ่มอะไรหรอ?" }}</h1>
             <textarea v-model="prompt" :placeholder="language == 'en' ? 'Enter your dreams....' : 'เขียนบอกให้ AI ทำให้เลย!' "></textarea>
             <br>
-            <button @click="generate_slide_layout(prompt)">{{ language == "en" ? "Add" : "เพิ่มเลย!" }}</button>
+            <button @click="async () => {const hi = await generate_slide_layout(); debugger;}">{{ language == "en" ? "Add" : "เพิ่มเลย!" }}</button>
         </div>
     </div>
 </template>

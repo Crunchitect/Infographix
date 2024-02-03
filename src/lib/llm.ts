@@ -17,7 +17,7 @@ type HFData = {
 };
 
 const prompts = {
-    generate_layouts: (prompt: string) => `
+    generate_layouts: () => `
     Can you make a basic presentation layout with this syntax?
     't' for text
     'i' for images
@@ -64,10 +64,9 @@ const ponl = (token: string) => ({
     }
 });
 
-const generate_slide_layout = async (prompt: string) => {
-    const resp = <string>await ponl(import.meta.env.VITE_HF_KEY).text_gen(prompts.generate_layouts(prompt));
-    console.log(resp.match(/\$[\{\}cithv%\^]+\$/g));
-    debugger
+const generate_slide_layout = async () => {
+    const resp = <string>await ponl(import.meta.env.VITE_HF_KEY).text_gen(prompts.generate_layouts());
+    return (resp.match(/\$[\{\}cithv%\^]+\$/g));
 };
 
 export default ponl;
