@@ -8,16 +8,16 @@
                (
                   team_members @> (
                      format(
-                        '[{"uid": "%s", "status": "owner"}]',
-                        auth.uid()
+                        '[{"email": "%s", "status": "owner"}]',
+                        auth.jwt() ->> 'email'
                      ) :: jsonb
                   )
                )
                OR (
                   team_members @> (
                      format(
-                        '[{"uid": "%s", "status": "edit"}]',
-                        auth.uid()
+                        '[{"email": "%s", "status": "edit"}]',
+                        auth.jwt() ->> 'email'
                      ) :: jsonb
                   )
                )

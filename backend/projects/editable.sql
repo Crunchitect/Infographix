@@ -9,20 +9,20 @@
             ("Teams".id = "Projects".team_id)
             AND (
                (
-                  "Teams".team_members @> (
+                  "Teams".team_members @ > (
                      format(
-                        '[{"uid": "%s", "status": "owner"}]',
-                        auth.uid()
-                     ) :: jsonb
-                  )
+                        '[{"email": "%s", "status": "owner"}]' :: text,
+                        (auth.jwt() ->> 'email' :: text)
+                     )
+                  ) :: jsonb
                )
                OR (
-                  "Teams".team_members @> (
+                  "Teams".team_members @ > (
                      format(
-                        '[{"uid": "%s", "status": "edit"}]',
-                        auth.uid()
-                     ) :: jsonb
-                  )
+                        '[{"email": "%s", "status": "edit"}]' :: text,
+                        (auth.jwt() ->> 'email' :: text)
+                     )
+                  ) :: jsonb
                )
             )
          )
