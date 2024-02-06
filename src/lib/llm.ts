@@ -16,6 +16,8 @@ type HFData = {
     }
 };
 
+// type HFResponse = {generated_text: string, [k: string | number | symbol]: any}[];
+
 const prompts = {
     generate_layouts: () => `
     Can you make a basic presentation layout with this syntax?
@@ -32,6 +34,9 @@ const prompts = {
     NO EXTRA STRINGS, ONLY LAYOUTS.
     If you understand, only respond with this syntax and please put the each layout in between '$'.
     example: $h{ttt}$ and $%^v{th{it}}$
+    `,
+    generate_text: (prompt: string) => `
+    Make an easy and concise explanation of ${prompt}.
     `
 }
 
@@ -54,9 +59,11 @@ const queryText = async (str: string, token: string) => {
 const ponl = (token: string) => ({
     async text_gen(prompt: string, onlyResp: boolean = true) {
         let prev_resp = `<s>[INST]${prompt}[/INST]`;
+        // @ts-ignore
         let resp = (await queryText(prev_resp, token))[0].generated_text;
         while (prev_resp != resp) {
             prev_resp = resp;
+            // @ts-ignore
             resp = (await queryText(prev_resp, token))[0].generated_text;
         }
         if (onlyResp) return resp.slice(resp.search(/\[\/INST\]/) + 7);
@@ -69,5 +76,10 @@ const generate_slide_layout = async () => {
     return (resp.match(/\$[\{\}cithv%\^]+\$/g));
 };
 
+const generate_text = async (prompt: string) => {
+    const resp = <string>await ponl(import.meta.env.VITE_HF_KEY).text_gen(prompts.generate_text(prompt));
+    return resp.replaceAll(`Make an easy and concise explanation of ${prompt}.`, "");
+};
+
 export default ponl;
-export { generate_slide_layout };
+export { generate_slide_layout, generate_text };

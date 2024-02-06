@@ -1,0 +1,40 @@
+Expression
+  = '$' layout: Layout '$' {
+  	return layout;
+  }
+  
+Layout
+  = mod: Modifier* flex:Flex '{' layout: Layout+ '}' {
+  	let str;
+  	switch (flex) {
+    	case 'v':
+        	str =  '<Vertical>' + layout.join('') + '</Vertical>';
+          break;
+        case 'h':
+        	str = '<Horizontal>' + layout.join('') + '</Horizontal>';
+          break;
+    }
+    if (mod.includes('%')) str = '<RandRot>' + str + '</RandRot>';
+    if (mod.includes('^')) str = '<RandPos>' + str + '</RandPos>';
+    return str;
+  }
+  / blocks: Block+ {
+  	return blocks.join('');
+  }
+ 
+Block
+  = mod: Modifier* block: [cti] {
+  	let str;
+  	if      (block === 'c') str = '<Chart />';
+    else if (block === 't') str = '<Text />';
+    else if (block === 'i') str = '<Image />';
+    if (mod.includes('%')) str = '<RandRot>' + str + '</RandRot>';
+    if (mod.includes('^')) str = '<RandPos>' + str + '</RandPos>';
+    return str;
+  }
+
+Flex
+  = [vh]
+  
+Modifier
+  = [%^]

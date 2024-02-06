@@ -15,6 +15,9 @@
     "allowArbitraryExtensions": true,
     "allowJs": true,
     "allowImportingTsExtensions": true,
-    "noEmit": true
+    "noEmit": true,
+    "lib": [
+      "ES2021.String"
+    ]
   }
 }

@@ -20,4 +20,9 @@ type Slide = {
 
 type VueElRef = null | HTMLElement;
 
-export type { LangTable, NoViewWidth, Element, Slide, AnytoAny, WannabeCSSDeclaration, VueElRef };
+type LayoutParserType = {
+    SyntaxError: Error,
+    parse: (a: string, b?: AnytoAny) => string | SyntaxError
+};
+
+export type { LangTable, NoViewWidth, Element, Slide, AnytoAny, WannabeCSSDeclaration, VueElRef, LayoutParserType };

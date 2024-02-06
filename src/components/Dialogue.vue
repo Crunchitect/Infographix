@@ -47,7 +47,7 @@
         width: 50vw;
         height: fit-content;
         margin: 10%;
-        z-index: 69421;
+        z-index: 6942069420;
     }
 
     .modal.cpb {
@@ -61,10 +61,11 @@
 
     .backdrop {
         top: 0;
+        left: 0;
         width: 100vw;
         height: 100vh;
         background-color: rgba(0, 0, 0, 0.8);
-        position: fixed;
+        position: absolute;
         display: flex;
         place-content: center;
         z-index: 69420;

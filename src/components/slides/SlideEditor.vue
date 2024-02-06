@@ -37,10 +37,17 @@
             <h1>{{ language == "en" ? "AI Prompt" : "คุณต้องการเพิ่มอะไรหรอ?" }}</h1>
             <textarea v-model="prompt" :placeholder="language == 'en' ? 'Enter your dreams....' : 'เขียนบอกให้ AI ทำให้เลย!' "></textarea>
             <br>
-            <button @click="async () => {const hi = await generate_slide_layout(); debugger;}">{{ language == "en" ? "Add" : "เพิ่มเลย!" }}</button>
+            <button @click="ai_prompt = !ai_prompt">{{ language == "en" ? "Add" : "เพิ่มเลย!" }}</button>
         </div>
+        <AIDialogue title="Add AI slides" :opened="ai_prompt" :prompt="prompt" />
     </div>
 </template>
+
+<style>
+    body {
+        overflow: hidden;
+    }
+</style>
 
 <style scoped>
     .container {
@@ -140,7 +147,7 @@
     import Card from '../Card.vue';
 
     import InnerEditor from '@/components/slides/InnerEditor.vue';
-    import { generate_slide_layout } from '@/lib/llm';
+    import AIDialogue from '@/components/slides/AIDialogue.vue';
 
     const props = defineProps({
         slide: Object as PropType<Slide>,
@@ -168,6 +175,7 @@
     let num_width = ref(0), num_height = ref(0);
     const show_add_popup = ref(false);
     const show_ai_popup = ref(false);
+    const ai_prompt = ref(false);
     const prompt = ref("");
 
     watchEffect(() => {
