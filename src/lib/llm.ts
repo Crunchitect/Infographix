@@ -20,7 +20,7 @@ type HFData = {
 
 const prompts = {
     generate_layouts: () => `
-    Can you make a basic presentation layout with this syntax?
+    Make a basic presentation layout with this syntax:
     't' for text
     'i' for images
     'c' for charts
@@ -30,7 +30,7 @@ const prompts = {
     '^' for random position and '%' for random rotation.
     '%^t' and '%h{tt}' for example.
     No other characters are valid except: t, i, c, h, v, {, }, ^ and %
-    NO OTHER CHARACTERS ARE CALID EXCEPT: 't', 'i', 'c', 'h', 'v', '{', '}', '^' and '%'.
+    NO OTHER CHARACTERS ARE VALID EXCEPT: 't', 'i', 'c', 'h', 'v', '{', '}', '^' and '%'.
     NO EXTRA STRINGS, ONLY LAYOUTS.
     If you understand, only respond with this syntax and please put the each layout in between '$'.
     example: $h{ttt}$ and $%^v{th{it}}$
@@ -40,7 +40,7 @@ const prompts = {
     `
 }
 
-const queryText = async (str: string, token: string) => {
+const queryText = async (str: string, token: string, cache: boolean = true) => {
     const response = await fetch(
         "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1",
         {
@@ -49,22 +49,22 @@ const queryText = async (str: string, token: string) => {
                 'Content-Type': 'application/json'
             },
             method: "POST",
-            body: JSON.stringify(<HFData>{inputs: str}),
+            body: JSON.stringify(<HFData>{inputs: str, options: {use_cache: cache}}),
         }
     );
     const result = await response.json();
     return result;
 }
 
-const ponl = (token: string) => ({
+const ponl = (token: string, cache: boolean = true) => ({
     async text_gen(prompt: string, onlyResp: boolean = true) {
         let prev_resp = `<s>[INST]${prompt}[/INST]`;
         // @ts-ignore
-        let resp = (await queryText(prev_resp, token))[0].generated_text;
+        let resp = (await queryText(prev_resp, token, cache))[0].generated_text;
         while (prev_resp != resp) {
             prev_resp = resp;
             // @ts-ignore
-            resp = (await queryText(prev_resp, token))[0].generated_text;
+            resp = (await queryText(prev_resp, token, cache))[0].generated_text;
         }
         if (onlyResp) return resp.slice(resp.search(/\[\/INST\]/) + 7);
         return resp + '</s>';
@@ -77,7 +77,7 @@ const generate_slide_layout = async () => {
 };
 
 const generate_text = async (prompt: string) => {
-    const resp = <string>await ponl(import.meta.env.VITE_HF_KEY).text_gen(prompts.generate_text(prompt));
+    const resp = <string>await ponl(import.meta.env.VITE_HF_KEY, false).text_gen(prompts.generate_text(prompt));
     return resp.replaceAll(`Make an easy and concise explanation of ${prompt}.`, "");
 };
 

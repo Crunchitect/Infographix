@@ -28,12 +28,12 @@
                     </div>
                 </div>
             </div>
-            <p v-else>Loading...</p>
+            <p v-else><Loading /></p>
         </div>
         <div class="page" v-else-if="page === 1">
             <h2>2. Generated Content</h2>
             <div v-if="selected_layout" v-html="selected_layout"></div>
-            <div v-else>Loading...</div>
+            <div v-else><Loading /></div>
         </div>
     </Dialogue>
 </template>
@@ -145,6 +145,7 @@
     import { layout_parser } from '@/lib/parser.js';
 
     import Dialogue from '../Dialogue.vue';
+    import Loading from '../Loading.vue';
 
     const props = defineProps({
         title: String,
