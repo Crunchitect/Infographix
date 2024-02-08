@@ -9,7 +9,7 @@
         </div>
         <div class="page" v-if="page === 0">
             <h2>1. Choose your layout</h2>
-            <div class="layouts" v-if="layouts">
+            <div class="layouts" v-if="layouts?.length">
                 <div
                     v-html="parse_layout(layout)"
                     @click="choose_layout(layout)"
@@ -22,7 +22,7 @@
                         <div 
                             :class="['page-indicator', (layout_page === i) && 'active']" 
                             @click="layout_page = i"
-                            v-for="i in range(layouts?.length / 4)"
+                            v-for="i in shutup(range, [layouts?.length / 4], [])"
                         >
                         </div>
                     </div>
@@ -158,6 +158,14 @@
     const layouts = ref(null as null | string[]);
 
     const selected_layout = ref('');
+
+    const shutup = (func: Function, args: any[], errval: any = null) => {
+        try {
+            return func(...args);
+        } catch {
+            return errval;
+        }
+    }
 
     const range = (n: number) => [...Array(n).keys()];
 
