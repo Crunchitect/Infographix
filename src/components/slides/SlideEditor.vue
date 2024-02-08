@@ -39,7 +39,7 @@
             <br>
             <button @click="ai_prompt = !ai_prompt">{{ language == "en" ? "Add" : "เพิ่มเลย!" }}</button>
         </div>
-        <AIDialogue title="Add AI slides" :opened="ai_prompt" :prompt="prompt" />
+        <AIDialogue title="Add AI slides" :opened="ai_prompt" :prompt="prompt" @ai_slide="ai_slide" />
     </div>
 </template>
 
@@ -163,7 +163,8 @@
         (e: "content", content: string, caret_pos: number, id: string): void,
         (e: "new_elem", tag: string, id: string): void,
         (e: "delete", id: string): void,
-        (e: "styles"): void
+        (e: "styles"): void,
+        (e: "ai_slide", slug: Slide): void
     }>();
 
     const new_elem = (tag: string) => {
@@ -201,6 +202,10 @@
 
     const delete_el = (id: string) => {
         emit("delete", id);
+    };
+
+    const ai_slide = (slug: Slide) => {
+        emit("ai_slide", slug);
     };
 
 </script>

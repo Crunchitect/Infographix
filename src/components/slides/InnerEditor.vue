@@ -4,7 +4,7 @@
 -->
 <template v-if="$refs">
     <TextFormat :update="text_edit_show" @delete="(id: string) => $emit('delete', id)" @styles="$emit('styles')"/>
-    <div ref="ctx" class="ctx">
+    <div ref="ctx" class="ctx" id="slide_edit_ctx">
         <BoxModal
             v-for="(element, index) in data?.content"
             @keydown="delete_elem"

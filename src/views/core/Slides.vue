@@ -31,6 +31,7 @@
                     @delete="delete_el"
                     @new_elem="new_elem"
                     @styles="styles"
+                    @ai_slide="ai_slide"
                 />
             </div>
         </div>
@@ -118,6 +119,10 @@
         slides.value.push({id: sid, content:[]} as Slide);
     };
 
+    const ai_slide = (slug: Slide) => {
+        slides.value.push(slug);
+    };
+
     const select_slide = (index: number) => {
         selected_slide_index.value = index;
     };
@@ -187,7 +192,7 @@
         });
     };
 
-    const new_elem = (tag: string, id: string, content?: string, attrs?: WannabeCSSDeclaration) => {
+    const new_elem = (tag: string, id: string, content: string = 'Insert text here...', attrs?: WannabeCSSDeclaration) => {
         slides.value = slides.value.map(slide => {
             return {
                 id: slide.id,
@@ -197,7 +202,7 @@
                     position: {
                         x: 69, y: 420, w: 420, h: 69
                     },
-                    content: is_text_elem(tag) ? (content ?? 'Insert text here...') : '',
+                    content: is_text_elem(tag) ? content : '',
                     attrs: attrs
                 }] : slide.content
             };

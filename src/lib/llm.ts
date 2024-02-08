@@ -16,6 +16,14 @@ type HFData = {
     }
 };
 
+type UnsplashResponse = {
+    results: {
+        urls: {
+            raw: string
+        }
+    }[]
+};
+
 // type HFResponse = {generated_text: string, [k: string | number | symbol]: any}[];
 
 const prompts = {
@@ -38,7 +46,7 @@ const prompts = {
     generate_text: (prompt: string) => `
     Make an easy and concise explanation of ${prompt}.
     `
-}
+};
 
 const queryText = async (str: string, token: string, cache: boolean = true) => {
     const response = await fetch(
@@ -54,7 +62,7 @@ const queryText = async (str: string, token: string, cache: boolean = true) => {
     );
     const result = await response.json();
     return result;
-}
+};
 
 const ponl = (token: string, cache: boolean = true) => ({
     async text_gen(prompt: string, onlyResp: boolean = true) {
@@ -71,15 +79,23 @@ const ponl = (token: string, cache: boolean = true) => ({
     }
 });
 
-const generate_slide_layout = async () => {
+export const generate_slide_layout = async () => {
     const resp = <string>await ponl(import.meta.env.VITE_HF_KEY).text_gen(prompts.generate_layouts());
     return (resp.match(/\$[\{\}cithv%\^]+\$/g));
 };
 
-const generate_text = async (prompt: string) => {
+export const generate_text = async (prompt: string) => {
     const resp = <string>await ponl(import.meta.env.VITE_HF_KEY, false).text_gen(prompts.generate_text(prompt));
     return resp.replaceAll(`Make an easy and concise explanation of ${prompt}.`, "");
 };
 
+export const generate_image = async (prompt: string) => {
+    const resp = await fetch(`https://api.unsplash.com/search/photos?client_id=${import.meta.env.VITE_UNSPLASH_KEY}&query=${prompt}&page=1&per_page=20`);
+    const blob = <UnsplashResponse>await resp.json();
+    const roll = Math.floor(Math.random() * 20);
+    const url = blob.results[roll].urls.raw;
+    console.log(url);
+    return url;
+};
+
 export default ponl;
-export { generate_slide_layout, generate_text };

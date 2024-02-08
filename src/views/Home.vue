@@ -31,12 +31,20 @@
             <p>{{ lang.imexport }}</p>
         </Card>
     </div>
+    <Dialogue :opened="true">
+        <h1>V1.0.0 Beta</h1>
+        <center><img src="../assets/landing/imgs/release.png" alt=""></center>
+        <p>Yup! Infographix <strong>V1.0.0 Beta</strong> is out!</p>
+        <p>Further notice will come soon, But for now enjoy the beta testing. You may report the bugs in <a href="https://docs.google.com/forms/u/1/d/e/1FAIpQLSd1NtobKaywVGUDsOxuQ_K97g6nVEzXgOOoLypzRI9nqfaWrQ/viewform?usp=send_form">the issues form</a></p>
+        <p>🎉🎉<strong>Events:</strong> The <a href="/place">r/place</a> for beta testing is out! Enjoy :]</p>
+    </Dialogue>
 </template>
 
 <script setup lang="ts">
     import { useRoute, useRouter } from 'vue-router';
-    import { ref, computed, reactive, onMounted } from 'vue';
+    import { computed, reactive, onMounted } from 'vue';
     import Card from '../components/Card.vue'
+    import Dialogue from '../components/Dialogue.vue'
     import anime from 'animejs';
 
     const route = useRoute();

@@ -32,8 +32,28 @@
         </div>
         <div class="page" v-else-if="page === 1">
             <h2>2. Generated Content</h2>
-            <div v-if="selected_layout" v-html="selected_layout"></div>
+            <div v-if="selected_layout">
+                <div v-html="selected_layout"></div>
+                <button class="darker" @click="page++">Use this Slide!</button>
+            </div>
             <div v-else><Loading /></div>
+        </div>
+        <div class="page" v-else-if="page === 2">
+            <h2>3. Building Slide Components</h2>
+            <div v-if="selected_layout">
+                <div class="build-parent">
+                    <div ref="slide" v-html="selected_layout"></div>
+                    <div class="logs" ref="logs">
+                        <p class="log" :style="{'color': log.color}" v-for="log in log_list">{{ log.log }}</p>
+                    </div>
+                </div>
+                <button class="darker" @click="build_slide">Build this Slide!</button>
+            </div>
+            <div v-else><Loading /></div>
+        </div>
+        <div class="page" v-else-if="page === 3">
+            <h2>4. All Done!</h2>
+            <p>Click out or the <i class="fa-solid fa-circle-xmark"></i> to close this dialogue.</p>
         </div>
     </Dialogue>
 </template>
@@ -98,9 +118,24 @@
         text-align: center;
         /* padding-top: 50%; */
     }
+
+    .full-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .gen-text, .gen-text p {
+        min-width: 0;
+    }
+
+    .ai-flex-row > * {
+        flex: 1;
+    }
 </style>
 
 <style scoped>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
     .page-indicators {
         display: flex;
         justify-content: center;
@@ -135,12 +170,37 @@
     .layout:hover {
         transform: scale(1.05);
     }
+
+    .darker {
+        background-color: #111;
+    }
+
+    .build-parent {
+        display: flex;
+        gap: 20px;
+    }
+
+    .logs {
+        background-color: #111;
+        flex-grow: 1;
+        border-radius: 10px;
+        min-width: 0;
+        height: 45vh;
+        overflow-y: scroll
+    }
+
+    .log {
+        outline: 1px solid gray;
+        font-family: 'Space Mono', monospace;
+        overflow-wrap: anywhere;
+    }
 </style>
 
 <script setup lang="ts">
     import { ref, onMounted } from 'vue';
-    import { generate_slide_layout, generate_text } from '@/lib/llm';
-    import type { LayoutParserType } from '@/lib/types';
+    import { generate_slide_layout, generate_text, generate_image } from '@/lib/llm';
+    import type { LayoutParserType, Slide, Element, VueElRef } from '@/lib/types';
+    import { generate_uuid_v4 } from '@/lib/generate_uuid';
     // @ts-ignore
     import { layout_parser } from '@/lib/parser.js';
 
@@ -153,11 +213,20 @@
         prompt: String
     });
 
+    const emit = defineEmits<{
+        (e: "ai_slide", slug: Slide): void
+    }>();
+
     const page = ref(0);
     const layout_page = ref(0);
     const layouts = ref(null as null | string[]);
 
     const selected_layout = ref('');
+
+    const logs = ref(null as VueElRef);
+    const slide = ref(null as VueElRef);
+
+    const log_list = ref([] as {log: string, color: string}[]);
 
     const shutup = (func: Function, args: any[], errval: any = null) => {
         try {
@@ -215,7 +284,6 @@
             '<div class="ai-layout-preview">' + 
             layout.toString()
                 .replace(/<\/\w+?>/g, "</div>")
-                .replaceAll("<Image />", "<div class='ai-gen-image'></div>")
                 .replaceAll("<Chart />", "<div class='ai-gen-chart'></div>")
                 .replaceAll("<RandPos>", "<div class='ai-gen-rand-pos'>")
                 .replaceAll("<RandRot>", "<div class='ai-gen-rand-rot'>")
@@ -224,10 +292,113 @@
             '</div>';
         layout = await replaceAsync(layout, /<Text \/>/g, async () => {
             const slug = await generate_text(props.prompt ?? "Artificial Intelligence");
-            return `<div class='ai-gen-text'><p>${slug}</p></div>`
+            return `<div class='gen-text'><p>${slug}</p></div>`
+        });
+        layout = await replaceAsync(layout, /<Image \/>/g, async () => {
+            const slug = await generate_image(props.prompt ?? "Artificial Intelligence");
+            return `<div class='gen-image'><img class="full-image" src="${slug}" /></div>`
         });
         selected_layout.value = layout;
         return layout;
+    };
+
+    const build_slide = () => {
+        let elems = <Element[]>[];
+        log_list.value = [];
+        const { x: rel_slide_x, y: rel_slide_y, width: rel_slide_width, height: rel_slide_height } = slide.value!.getBoundingClientRect();
+        const { width: slide_width, height: slide_height } = document.getElementById('slide_edit_ctx')!.getBoundingClientRect();
+        log_list.value.push({
+            log: `[CORE] Slide dimensions are ${slide_width}x${slide_height}`,
+            color: 'red'
+        });
+        log_list.value.push({
+            log: `[CORE] Generated Slide dimensions are ${rel_slide_width}x${rel_slide_height}`,
+            color: 'red'
+        });
+        [].slice.call(slide.value!.getElementsByTagName('p')).forEach((element: HTMLParagraphElement) => {
+            log_list.value.push({
+                log: "[NEW] Detected a new element: Paragraph.",
+                color: 'lime'
+            });
+            const { x, y, width, height } = element.getBoundingClientRect();
+            log_list.value.push({
+                log: `[INFO] Element Dimensions are "${width}x${height}+${x}+${y}"`,
+                color: 'cyan'
+            });
+            const rel_x = Math.floor((x - rel_slide_x) / rel_slide_width * slide_width);
+            const rel_y = Math.floor((y - rel_slide_y) / rel_slide_height * slide_height);
+            const rel_w = Math.floor(width / rel_slide_width * slide_width);
+            const rel_h = Math.floor(height / rel_slide_height * slide_height);
+            log_list.value.push({
+                log: `[INFO] Relative Element Dimensions are "${rel_w}x${rel_h}+${rel_x}+${rel_y}"`,
+                color: 'cyan'
+            });
+            const elem_obj = <Element>{
+                id: generate_uuid_v4(),
+                tag: "p",
+                content: element.innerHTML,
+                position: {
+                    x: rel_x,
+                    y: rel_y,
+                    w: rel_w,
+                    h: rel_h,
+                    r: 0
+                }
+            };
+            log_list.value.push({
+                log: `[BUILD] Create Element with JSON: ${JSON.stringify(elem_obj)}`,
+                color: 'yellow'
+            });
+            elems.push(elem_obj);
+        });
+        [].slice.call(slide.value!.getElementsByTagName('img')).forEach((element: HTMLImageElement) => {
+            log_list.value.push({
+                log: "[NEW] Detected a new element: Image.",
+                color: 'lime'
+            });
+            const { x, y, width, height } = element.getBoundingClientRect();
+            log_list.value.push({
+                log: `[INFO] Element Dimensions are "${width}x${height}+${x}+${y}"`,
+                color: 'cyan'
+            });
+            const rel_x = Math.floor((x - rel_slide_x) / rel_slide_width * slide_width);
+            const rel_y = Math.floor((y - rel_slide_y) / rel_slide_height * slide_height);
+            const rel_w = Math.floor(width / rel_slide_width * slide_width);
+            const rel_h = Math.floor(height / rel_slide_height * slide_height);
+            log_list.value.push({
+                log: `[INFO] Relative Element Dimensions are "${rel_w}x${rel_h}+${rel_x}+${rel_y}"`,
+                color: 'cyan'
+            });
+            const elem_obj = <Element>{
+                id: generate_uuid_v4(),
+                tag: "img",
+                position: {
+                    x: rel_x,
+                    y: rel_y,
+                    w: rel_w,
+                    h: rel_h,
+                    r: 0
+                },
+                attrs: {
+                    src: element.src
+                }
+            };
+            log_list.value.push({
+                log: `[BUILD] Create Element with JSON: ${JSON.stringify(elem_obj)}`,
+                color: 'yellow'
+            });
+            elems.push(elem_obj);
+        });
+        const slide_content = <Slide>{
+            id: generate_uuid_v4(),
+            content: elems
+        }
+        log_list.value.push({
+            log: `[BUILD] Created Slide with JSON: ${JSON.stringify(slide_content)}`,
+            color: 'yellow'
+        });
+        emit("ai_slide", slide_content);
+        page.value++;
     };
     
     onMounted(async () => {

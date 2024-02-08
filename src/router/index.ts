@@ -42,10 +42,14 @@ const router = createRouter({
       component: () => import('../views/About.vue')
     },
     {
+      path: '/place',
+      redirect: '/slide/fdb8fad1-c0f9-41b8-a85b-2a323d614838'
+    },
+    {
       path: '/:catchAll(.*)',
       name: 'NotFound',
       component: () => import('../views/NotFound.vue')
-    }
+    },
   ]
 })
 
