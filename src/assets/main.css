@@ -1,32 +1,37 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap');
+@import url('./themes/classic.css');
+
 
 * {
-  font-family: 'IBM Plex Sans Thai', sans-serif;
-  direction: ltr !important;
+  font-family: var(--font-family), var(--font-family-fallback);
 }
 
 body {
   margin: 0;
-  background-color: #111;
+  background-color: var(--bg-col-primary);
   color: white;
   overflow-x: hidden;
 }
 
 a {
   text-decoration: none;
-  color: white;
+  color: var(--nav-inactive-fg);
+  background-color: var(--nav-inactive-bg);
+  border: var(--nav-inactive-border);
   border-radius: 10px;
   padding: 5px;
   margin: 5px;
 }
 
 a.router-link-exact-active {
-  background-color: white;
-  color: black;
+  border: var(--nav-active-border);
+  background-color: var(--nav-active-bg);
+  color: var(--nav-active-fg);
 }
 
 .fancy-text {
-  background: -webkit-linear-gradient(#02fa02, #13a500);
+  background: linear-gradient(to right, var(--gradient-primary), var(--gradient-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -37,13 +42,13 @@ a.router-link-exact-active {
 
 @keyframes glitch {
   2%,64%{
-    transform: translate(2px,0) skew(0deg);
+    transform: var(--glitch-start);
   }
   4%,60%{
-    transform: translate(-2px,0) skew(0deg);
+    transform: var(--glitch-transistion);
   }
   62%{
-    transform: translate(0,0) skew(5deg); 
+    transform: var(--glitch-end); 
   }
 }
 

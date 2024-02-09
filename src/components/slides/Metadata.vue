@@ -51,7 +51,6 @@
     };
 
     const invite = async (e: MouseEvent) => {
-        console.log(props.team_id)
         const team_members = await supabase
             .from("Teams")
             .select("team_members")
@@ -72,7 +71,8 @@
         (<HTMLElement>e.target).classList.add('fa-paper-plane');
         (<HTMLElement>e.target).classList.remove('fa-check');
         (<HTMLElement>e.target).classList.remove('fa-beat');
-    }
+        shared_address.value = "";
+    };
 
    const status = computed(() => props.cloud_status);
 </script>

@@ -1,0 +1,27 @@
+:root {
+    /* Core Styles */
+    --font-family: 'Reenie Beanie';
+    --font-family-fallback: cursive;
+
+    /* Main Colors */
+    --bg-col-primary: white;
+    --fg-col-primary: black;
+
+    /* Router Decoration */
+    --nav-inactive-border: none;
+    --nav-inactive-fg: black;
+    --nav-inactive-bg: transparent;
+
+    --nav-active-border: 1px dotted black;
+    --nav-active-fg: black;
+    --nav-active-bg: none;
+
+    /* ✨✨ Fancy Schmancy Gradients */
+    --gradient-primary: #02fa02;
+    --gradient-secondary: #13a500;
+
+    /* Glitch Animation */
+    --glitch-start: translate(2px,0) skew(0deg);
+    --glitch-transition: translate(-2px,0) skew(0deg);
+    --glitch-end: translate(0,0) skew(5deg);
+}
