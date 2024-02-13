@@ -6,10 +6,7 @@ gib me money :\
 
 | Version               | Supported          |
 | --------------------- | ------------------ |
-| every fucking version | :x:                |
-| every fucking version | :x:                |
-| every fucking version | :x:                |
-| every fucking version | :x:                |
+| v1.0.0                | :check:            |
 
 ## Reporting a Vulnerability
 

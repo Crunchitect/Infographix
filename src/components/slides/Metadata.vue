@@ -57,7 +57,6 @@
     };
 
     const invite = async (e: MouseEvent) => {
-        console.log(props.team_id)
         const team_members = await supabase
             .from("Teams")
             .select("team_members")

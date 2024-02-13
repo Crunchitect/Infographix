@@ -31,7 +31,7 @@
             <p>{{ lang.imexport }}</p>
         </Card>
     </div>
-    <Dialogue :opened="true">
+    <Dialogue :opened="opened">
         <h1>V1.0.0 Beta</h1>
         <center><img src="../assets/landing/imgs/release.png" alt=""></center>
         <p>Yup! Infographix <strong>V1.0.0 Beta</strong> is out!</p>
@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
     import { useRoute, useRouter } from 'vue-router';
-    import { computed, reactive, onMounted } from 'vue';
+    import { ref, computed, reactive, onMounted } from 'vue';
     import Card from '../components/Card.vue'
     import Dialogue from '../components/Dialogue.vue'
     import anime from 'animejs';
@@ -54,6 +54,8 @@
     const props = defineProps({
         language: String
     });
+
+    const opened = ref(false);
 
     type LangTable = {"en": {[index: string]: string}, "th": {[index: string]: string}};
     const langs = reactive(<LangTable>{
@@ -90,6 +92,8 @@
     const lang = computed(() => langs[props.language as ("en" | "th")]);
 
     onMounted(() => {
+        opened.value = true;
+
         let d = document.querySelector('.center');
         let randlist = [...Array(20).keys()].sort(() => .5 - Math.random())
         for (let i=0; i<18; i++) {

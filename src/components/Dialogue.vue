@@ -2,7 +2,7 @@
     <div class="backdrop" v-show="_opened" @click.self="close">
         <div :class="{modal: true, cpb: theme === 'corporate-bullshit'}">
             <i 
-            :class="['fa-solid', xactive ? 'fa-circle-xmark' : 'fa-xmark', xactive ? 'fa-1.5x' : '']"
+            :class="['fa-solid', 'sticky', xactive ? 'fa-circle-xmark' : 'fa-xmark', xactive ? 'fa-1.5x' : '']"
             @mouseover="toggle_x"
             @mouseout="toggle_x"
             @click="close"
@@ -45,9 +45,10 @@
         padding: 20px;
         border-radius: 10px;
         width: 50vw;
-        height: fit-content;
+        height: fit-content(50vh);
         margin: 10%;
         z-index: 6942069420;
+        overflow-y: auto;
     }
 
     .modal.cpb {
@@ -77,5 +78,11 @@
 
     .fa-circle-xmark {
         color: rgb(255, 134, 134);
+    }
+
+    .sticky {
+        position: sticky;
+        float: right;
+        
     }
 </style>
