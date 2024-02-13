@@ -37,6 +37,11 @@ const router = createRouter({
       component: () => import('../views/core/Slides.vue')
     },
     {
+      path: '/slide/:id/present',
+      name: 'ShowSlide',
+      component: () => import('../views/core/ShowSlide.vue')
+    },
+    {
       path: '/about',
       name: 'About',
       component: () => import('../views/About.vue')

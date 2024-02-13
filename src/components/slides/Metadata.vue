@@ -10,6 +10,8 @@
                 </span>
             </span></h1>
             <p style="word-wrap: none;">
+                <i class="fa-solid fa-desktop" @click="present"></i>
+                &nbsp;
                 <span class="share">
                     <input type="text" placeholder="Share to..." v-model="shared_address"> &nbsp;&nbsp;
                     <i class="fa-solid fa-paper-plane fa-sm" @click="invite"></i>
@@ -28,6 +30,10 @@
     import { metaState } from '@/state/is_meta_opened';
     import { supabase } from '@/lib/supabase';
     import { wait } from '@/lib/wait';
+    import { useRoute, useRouter } from 'vue-router';
+
+    const route = useRoute();
+    const router = useRouter();
 
     import CloudSaving from '@/components/icons/CloudSaving.vue';
     import CloudSaved from '@/components/icons/CloudSaved.vue';
@@ -72,7 +78,13 @@
         (<HTMLElement>e.target).classList.add('fa-paper-plane');
         (<HTMLElement>e.target).classList.remove('fa-check');
         (<HTMLElement>e.target).classList.remove('fa-beat');
-    }
+        shared_address.value = "";
+    };
+
+    const present = () => {
+        const id = route.params.id;
+        router.push(`/slide/${id}/present`);
+    };
 
    const status = computed(() => props.cloud_status);
 </script>
