@@ -51,6 +51,11 @@ const router = createRouter({
       redirect: '/slide/fdb8fad1-c0f9-41b8-a85b-2a323d614838'
     },
     {
+      path: '/status',
+      name: 'Status',
+      component: () => import('../views/Status.vue')
+    },
+    {
       path: '/:catchAll(.*)',
       name: 'NotFound',
       component: () => import('../views/NotFound.vue')
