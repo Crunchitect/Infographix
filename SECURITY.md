@@ -6,7 +6,7 @@ gib me money :\
 
 | Version               | Supported          |
 | --------------------- | ------------------ |
-| v1.0.0                | :check:            |
+| v1.0.0                | ✔                  |
 
 ## Reporting a Vulnerability
 
