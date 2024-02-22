@@ -37,7 +37,7 @@
                     'text-align': 'center'
                 }"
                 v-bind="element.attrs"
-                v-html="element.content"
+                v-html="sanitizeHtml(element.content!)"
                 contenteditable
                 class="no-focus full"
                 @focus="text_edit_show = {tag: element.tag, id: element.id}"
@@ -83,6 +83,7 @@
 <script lang="ts" setup>
     import { type PropType, ref } from 'vue';
     import { getCaretPosition } from '@/lib/caret_position';
+    import sanitizeHtml from 'sanitize-html';
 
     // @ts-ignore
     import BoxModal from '@gausszhou/vue3-drag-resize-rotate';
